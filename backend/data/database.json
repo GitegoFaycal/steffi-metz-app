@@ -1,0 +1,154 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@steffi.com",
+      "role": "admin",
+      "passwordHash": "240be518fabd2724f12b3e440f57b9131c8c114d160d2dba01761195ccd8a74e"
+    }
+  ],
+  "orders": [],
+  "payments": [],
+  "newsletters": [],
+  "emails": [],
+  "boxes": [
+    {
+      "id": 1,
+      "name": "The Gourmet Picnic Box",
+      "price": "52,000",
+      "serves": "2",
+      "items": [
+        "Sourdough Bread",
+        "Rosemary Focaccia",
+        "Hummus",
+        "Baba Ganoush",
+        "Herb Dip",
+        "Marinated Olives",
+        "Sun-Dried Tomatoes",
+        "2 \u00d7 Kombucha"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "The Artisan Dip Box",
+      "price": "45,000",
+      "serves": "2",
+      "items": [
+        "Sourdough Bread",
+        "Rosemary Focaccia",
+        "Hummus",
+        "Muhammara",
+        "Herb Dip",
+        "Marinated Olives",
+        "Sun-Dried Tomatoes"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "The Pretzel & Cheese Box",
+      "price": "39,000",
+      "serves": "2",
+      "items": [
+        "2 Fresh Pretzels",
+        "Hummus",
+        "Artisan Cheese",
+        "Premium Nuts",
+        "2 \u00d7 Kombucha"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "The Gourmet Sharing Box",
+      "price": "75,000",
+      "serves": "4\u20136",
+      "items": [
+        "Large Sourdough",
+        "Rosemary Focaccia",
+        "Hummus",
+        "Muhammara",
+        "Herb Dip",
+        "Aged Cheese",
+        "House Granola",
+        "Oat Milk",
+        "3 \u00d7 Kombucha"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "The Mediterranean Feast",
+      "price": "105,000",
+      "serves": "4\u20136",
+      "items": [
+        "Large Sourdough",
+        "Hummus",
+        "Muhammara",
+        "Herb Dip",
+        "Marinated Olives",
+        "Premium Nuts",
+        "Sun-Dried Tomatoes",
+        "Artisan Cheese",
+        "Peanut Butter",
+        "Almond Butter",
+        "2 \u00d7 Kombucha"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "The Breakfast Box",
+      "price": "53,000",
+      "serves": "2",
+      "items": [
+        "House Granola",
+        "Yogoat Yogurt",
+        "Oat Milk",
+        "Almond Butter",
+        "2 Fresh Pretzels",
+        "2 \u00d7 Kombucha"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "The Kigali Luxury Box",
+      "price": "105,000",
+      "serves": "4\u20136",
+      "items": [
+        "Artisan Sourdough",
+        "Rosemary Focaccia",
+        "Hummus",
+        "Muhammara",
+        "Herb Dip",
+        "Artisan Cheese",
+        "Premium Nuts",
+        "Marinated Olives",
+        "Sun-Dried Tomatoes",
+        "Almond Butter",
+        "Peanut Butter",
+        "4 \u00d7 Kombucha"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "title": "Cooking Classes",
+      "price": "From 35,000 RWF",
+      "description": "Hands-on sessions for bread, dips, fermented drinks and seasonal menus.",
+      "badge": "Weekly"
+    },
+    {
+      "id": 2,
+      "title": "Tasting Evenings",
+      "price": "From 25,000 RWF",
+      "description": "Small-group tasting nights featuring artisan cheese, kombucha, sourdough and gourmet pairings.",
+      "badge": "Limited seats"
+    },
+    {
+      "id": 3,
+      "title": "Private Catering",
+      "price": "Custom quote",
+      "description": "Grazing tables, gourmet boxes and healthy menus for birthdays, team days and family events.",
+      "badge": "On request"
+    }
+  ]
+}

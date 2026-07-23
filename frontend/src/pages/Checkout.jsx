@@ -1,6 +1,6 @@
 import {useEffect,useState} from 'react';
 import SectionTitle from '../components/SectionTitle';
-import {createOrder,createPayment,getData} from '../api';
+import {createOrder,createPayment,getData} from '../api/index';
 
 export default function Checkout(){
   const [boxes,setBoxes]=useState([]);

@@ -1,0 +1,23 @@
+{
+  "name": "steffi-metz-backend",
+  "version": "1.0.0",
+  "description": "Node.js Express MySQL backend for Steffi Metz website admin dashboard",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "jsonwebtoken": "latest",
+    "multer": "latest",
+    "mysql2": "latest"
+  },
+  "devDependencies": {
+    "nodemon": "latest"
+  }
+}

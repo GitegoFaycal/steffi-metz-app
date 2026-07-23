@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { MessageCircle } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import BoxCard from '../components/BoxCard';
-import { getData } from '../api';
+import { getData } from '../api/index';
 
 const imgs = [
   '/assets/image-6.jpg',

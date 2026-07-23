@@ -1,8 +1,18 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { isAdminLoggedIn } from '../api/authApi';
+import { useAuth } from '../context/AuthContext';
 
 export default function ProtectedRoute() {
-  if (!isAdminLoggedIn()) {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-linen flex items-center justify-center">
+        <p className="text-stone-500">Checking admin access...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 

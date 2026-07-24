@@ -191,6 +191,7 @@ export default function Home() {
       </section>
 
       <Marquee />
+       <FindShop />
 
       <section className="section bg-linen">
         <div className="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-16 items-center">
@@ -249,7 +250,6 @@ export default function Home() {
       </div>
       <CatalogueCTA />
        <Newsletter />
-       <FindShop />
     </>
   );
 }

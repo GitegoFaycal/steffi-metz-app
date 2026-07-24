@@ -46,6 +46,11 @@ export async function updateSettings(req, res) {
       shop_title,
       opening_hours,
       footer_description,
+      community_eyebrow,
+      community_title,
+      community_description,
+      community_button_text,
+      community_whatsapp_message,
     } = req.body;
 
     const [existingRows] = await db.query(
@@ -68,9 +73,15 @@ export async function updateSettings(req, res) {
           newsletter_title,
           newsletter_description,
           shop_title,
-          opening_hours
+          opening_hours,
+          footer_description,
+          community_eyebrow,
+          community_title,
+          community_description,
+          community_button_text,
+          community_whatsapp_message
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
         [
           site_name || '',
@@ -86,6 +97,12 @@ export async function updateSettings(req, res) {
           newsletter_description || '',
           shop_title || '',
           opening_hours || '',
+          footer_description || '',
+          community_eyebrow || '',
+          community_title || '',
+          community_description || '',
+          community_button_text || '',
+          community_whatsapp_message || '',
         ]
       );
 
@@ -119,8 +136,13 @@ export async function updateSettings(req, res) {
         newsletter_title = ?,
         newsletter_description = ?,
         shop_title = ?,
-        opening_hours = ?
-        footer_description = ?
+        opening_hours = ?,
+        footer_description = ?,
+        community_eyebrow = ?,
+        community_title = ?,
+        community_description = ?,
+        community_button_text = ?,
+        community_whatsapp_message = ?
       WHERE id = ?
       `,
       [
@@ -137,8 +159,13 @@ export async function updateSettings(req, res) {
         newsletter_description || '',
         shop_title || '',
         opening_hours || '',
-        settingsId,
         footer_description || '',
+        community_eyebrow || '',
+        community_title || '',
+        community_description || '',
+        community_button_text || '',
+        community_whatsapp_message || '',
+        settingsId,
       ]
     );
 

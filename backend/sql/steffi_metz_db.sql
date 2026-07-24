@@ -178,6 +178,8 @@ CREATE TABLE IF NOT EXISTS settings (
   opening_hours TEXT,
   shop_image VARCHAR(255),
 
+  footer_description TEXT,
+
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -270,7 +272,8 @@ INSERT INTO settings (
   newsletter_description,
   shop_title,
   opening_hours,
-  shop_image
+  shop_image,
+  footer_description
 )
 SELECT
   'Steffi Metz',
@@ -288,7 +291,8 @@ SELECT
   'Find the Gourmet Shop',
   'Mon - Fri: 09:00 - 18:00
 Sat: 10:00 - 14:00',
-  '/assets/image-13.jpg'
+  '/assets/image-13.jpg',
+  'Artisan foods, catering, gourmet gift boxes, cooking classes and unforgettable culinary experiences handcrafted in Kigali.'
 WHERE NOT EXISTS (SELECT 1 FROM settings);
 
 -- =========================

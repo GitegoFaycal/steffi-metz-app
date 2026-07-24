@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import FormInput from '../components/FormInput';
 import ImageUpload from '../components/ImageUpload';
+
 import {
   getSettings,
   updateSettings,
@@ -23,7 +24,17 @@ const defaultForm = {
   shop_title: '',
   opening_hours: '',
   footer_description: '',
+  community_eyebrow: '',
+  community_title: '',
+  community_description: '',
+  community_button_text: '',
+  community_whatsapp_message: '',
 };
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const SERVER_URL = API_BASE_URL.replace(/\/api\/?$/, '');
 
 function getImageUrl(imagePath) {
   if (!imagePath) {
@@ -35,7 +46,7 @@ function getImageUrl(imagePath) {
   }
 
   if (imagePath.startsWith('/uploads')) {
-    return `http://localhost:5000${imagePath}`;
+    return `${SERVER_URL}${imagePath}`;
   }
 
   return imagePath;
@@ -56,7 +67,7 @@ export default function SettingsManager() {
   const loadSettings = async () => {
     try {
       const data = await getSettings();
-      const settings = data.settings || data.data || data || {};
+      const settings = data.settings || {};
 
       setForm({
         site_name: settings.site_name || '',
@@ -73,6 +84,12 @@ export default function SettingsManager() {
         shop_title: settings.shop_title || '',
         opening_hours: settings.opening_hours || '',
         footer_description: settings.footer_description || '',
+        community_eyebrow: settings.community_eyebrow || '',
+        community_title: settings.community_title || '',
+        community_description: settings.community_description || '',
+        community_button_text: settings.community_button_text || '',
+        community_whatsapp_message:
+          settings.community_whatsapp_message || '',
       });
 
       if (settings.logo) {
@@ -161,8 +178,8 @@ export default function SettingsManager() {
         </h1>
 
         <p className="text-stone-600 mt-3 max-w-2xl leading-7">
-          Update website identity, contact details, WhatsApp links, catalogue
-          section, newsletter section, and shop information.
+          Update website identity, contact details, catalogue section,
+          newsletter section, community section, shop information, and footer.
         </p>
       </div>
 
@@ -170,7 +187,7 @@ export default function SettingsManager() {
         onSubmit={handleSubmit}
         className="bg-white border border-olive/10 rounded-xl p-6 grid gap-8"
       >
-        <div>
+        <section>
           <h2 className="font-serif text-3xl text-olive-dark mb-5">
             General Website Settings
           </h2>
@@ -184,15 +201,6 @@ export default function SettingsManager() {
               placeholder="Steffi Metz"
               required
             />
-            <FormInput
-            label="Footer Description"
-            name="footer_description"
-            value={form.footer_description}
-            onChange={handleChange}
-             textarea
-             rows={4}
-             placeholder="Artisan foods, catering, gourmet gift boxes..."
-             />
 
             <FormInput
               label="WhatsApp Number"
@@ -243,15 +251,15 @@ export default function SettingsManager() {
               placeholder="https://tiktok.com/..."
             />
           </div>
-        </div>
+        </section>
 
-        <div>
+        <section>
           <h2 className="font-serif text-3xl text-olive-dark mb-5">
-            Logo
+            Website Logo
           </h2>
 
           <ImageUpload
-            label="Website Logo"
+            label="Logo"
             imagePreview={logoPreview}
             onChange={handleLogoChange}
             onRemove={() => {
@@ -259,9 +267,9 @@ export default function SettingsManager() {
               setLogoPreview('');
             }}
           />
-        </div>
+        </section>
 
-        <div>
+        <section>
           <h2 className="font-serif text-3xl text-olive-dark mb-5">
             Catalogue Section
           </h2>
@@ -285,9 +293,9 @@ export default function SettingsManager() {
               placeholder="From individual products to full gourmet boxes..."
             />
           </div>
-        </div>
+        </section>
 
-        <div>
+        <section>
           <h2 className="font-serif text-3xl text-olive-dark mb-5">
             Newsletter Section
           </h2>
@@ -311,16 +319,16 @@ export default function SettingsManager() {
               placeholder="Exclusive recipes, product launches and event invitations..."
             />
           </div>
-        </div>
+        </section>
 
-        <div>
+        <section>
           <h2 className="font-serif text-3xl text-olive-dark mb-5">
             Find Shop Section
           </h2>
 
           <div className="grid gap-5">
             <FormInput
-              label="Shop Section Title"
+              label="Shop Title"
               name="shop_title"
               value={form.shop_title}
               onChange={handleChange}
@@ -334,7 +342,7 @@ export default function SettingsManager() {
               onChange={handleChange}
               textarea
               rows={4}
-              placeholder="Mon – Fri: 09:00 – 18:00&#10;Sat: 10:00 – 14:00"
+              placeholder="Mon - Fri: 09:00 - 18:00&#10;Sat: 10:00 - 14:00"
             />
 
             <ImageUpload
@@ -347,7 +355,75 @@ export default function SettingsManager() {
               }}
             />
           </div>
-        </div>
+        </section>
+
+        <section>
+          <h2 className="font-serif text-3xl text-olive-dark mb-5">
+            Community Section
+          </h2>
+
+          <div className="grid gap-5">
+            <FormInput
+              label="Community Eyebrow"
+              name="community_eyebrow"
+              value={form.community_eyebrow}
+              onChange={handleChange}
+              placeholder="Join the movement"
+            />
+
+            <FormInput
+              label="Community Title"
+              name="community_title"
+              value={form.community_title}
+              onChange={handleChange}
+              placeholder="The Artisan<br/><em>Food Community</em>"
+            />
+
+            <FormInput
+              label="Community Description"
+              name="community_description"
+              value={form.community_description}
+              onChange={handleChange}
+              textarea
+              rows={4}
+              placeholder="Expats, locals, families and professionals meet around handmade food..."
+            />
+
+            <FormInput
+              label="Community Button Text"
+              name="community_button_text"
+              value={form.community_button_text}
+              onChange={handleChange}
+              placeholder="Join on WhatsApp"
+            />
+
+            <FormInput
+              label="Community WhatsApp Message"
+              name="community_whatsapp_message"
+              value={form.community_whatsapp_message}
+              onChange={handleChange}
+              textarea
+              rows={3}
+              placeholder="Hi Steffi! I would like to join the Artisan Food Community updates."
+            />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="font-serif text-3xl text-olive-dark mb-5">
+            Footer Section
+          </h2>
+
+          <FormInput
+            label="Footer Description"
+            name="footer_description"
+            value={form.footer_description}
+            onChange={handleChange}
+            textarea
+            rows={4}
+            placeholder="Artisan foods, catering, gourmet gift boxes..."
+          />
+        </section>
 
         {notice && (
           <p className="text-sm text-olive-dark">

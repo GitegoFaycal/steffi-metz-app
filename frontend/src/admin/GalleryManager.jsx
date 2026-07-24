@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import FormInput from '../components/FormInput';
 import ImageUpload from '../components/ImageUpload';
+
 import {
   getGallery,
   uploadGalleryImage,
@@ -9,10 +10,31 @@ import {
   deleteGalleryImage,
 } from '../api/galleryApi';
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const SERVER_URL = API_BASE_URL.replace(/\/api\/?$/, '');
+
 const emptyForm = {
   title: '',
   category: '',
 };
+
+function getImageUrl(imagePath) {
+  if (!imagePath) {
+    return '';
+  }
+
+  if (imagePath.startsWith('http')) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith('/uploads')) {
+    return `${SERVER_URL}${imagePath}`;
+  }
+
+  return imagePath;
+}
 
 export default function GalleryManager() {
   const [gallery, setGallery] = useState([]);
@@ -26,7 +48,7 @@ export default function GalleryManager() {
   const loadGallery = async () => {
     try {
       const data = await getGallery();
-      setGallery(data.gallery || data.data || data || []);
+      setGallery(data.gallery || data.data || []);
     } catch (error) {
       console.error('Failed to load gallery:', error);
     }
@@ -68,11 +90,17 @@ export default function GalleryManager() {
       category: item.category || '',
     });
 
-    setPreview(item.image || item.image_url || '');
+    setPreview(getImageUrl(item.image || item.image_url || ''));
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     setLoading(true);
     setMessage('');
 
@@ -80,7 +108,7 @@ export default function GalleryManager() {
       const formData = new FormData();
 
       formData.append('title', form.title);
-      formData.append('category', form.category);
+      formData.append('category', form.category || '');
 
       if (imageFile) {
         formData.append('image', imageFile);
@@ -139,7 +167,8 @@ export default function GalleryManager() {
 
         <p className="text-stone-600 mt-3 max-w-2xl leading-7">
           Upload, update, and delete gallery images displayed on the public
-          website.
+          website. To use images in the Community background slideshow, set the
+          category to community.
         </p>
       </div>
 
@@ -166,7 +195,7 @@ export default function GalleryManager() {
             name="category"
             value={form.category}
             onChange={handleChange}
-            placeholder="Food, Events, Classes..."
+            placeholder="community, food, events, classes..."
           />
 
           <ImageUpload
@@ -220,7 +249,7 @@ export default function GalleryManager() {
           ) : (
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
               {gallery.map((item) => {
-                const imageSrc = item.image || item.image_url;
+                const imageSrc = getImageUrl(item.image || item.image_url);
 
                 return (
                   <div
@@ -228,12 +257,16 @@ export default function GalleryManager() {
                     className="border border-olive/10 rounded-lg overflow-hidden bg-cream"
                   >
                     {imageSrc ? (
-                      {imageSrc}
-                    ) : (
-                      <div className="w-full h-48 bg-stone-200 flex items-center justify-center text-stone-500 text-sm">
-                        No image
-                      </div>
-                    )}
+  <img
+    src={imageSrc}
+    alt={item.title}
+    className="w-full h-48 object-cover"
+  />
+) : (
+  <div className="w-full h-48 bg-stone-200 flex items-center justify-center text-stone-500 text-sm">
+    No image
+  </div>
+)}
 
                     <div className="p-4">
                       <h3 className="font-serif text-xl text-olive-dark">

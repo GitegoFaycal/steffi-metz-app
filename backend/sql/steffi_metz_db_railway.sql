@@ -1,5 +1,4 @@
-CREATE DATABASE IF NOT EXISTS steffi_metz_db;
-USE steffi_metz_db;
+USE railway;
 
 -- =========================
 -- USERS
@@ -180,6 +179,12 @@ CREATE TABLE IF NOT EXISTS settings (
 
   footer_description TEXT,
 
+  community_eyebrow VARCHAR(150),
+  community_title VARCHAR(255),
+  community_description TEXT,
+  community_button_text VARCHAR(100),
+  community_whatsapp_message TEXT,
+
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -273,7 +278,12 @@ INSERT INTO settings (
   shop_title,
   opening_hours,
   shop_image,
-  footer_description
+  footer_description,
+  community_eyebrow,
+  community_title,
+  community_description,
+  community_button_text,
+  community_whatsapp_message
 )
 SELECT
   'Steffi Metz',
@@ -289,10 +299,14 @@ SELECT
   'Recipes & offers, in your inbox',
   'Exclusive recipes, product launches and event invitations — no spam, just handmade goodness.',
   'Find the Gourmet Shop',
-  'Mon - Fri: 09:00 - 18:00
-Sat: 10:00 - 14:00',
+  'Mon - Fri: 09:00 - 18:00\nSat: 10:00 - 14:00',
   '/assets/image-13.jpg',
-  'Artisan foods, catering, gourmet gift boxes, cooking classes and unforgettable culinary experiences handcrafted in Kigali.'
+  'Artisan foods, catering, gourmet gift boxes, cooking classes and unforgettable culinary experiences handcrafted in Kigali.',
+  'Join the movement',
+  'The Artisan<br/><em>Food Community</em>',
+  'Expats, locals, families and professionals meet around handmade food, practical workshops and memorable experiences.',
+  'Join on WhatsApp',
+  'Hi Steffi! I would like to join the Artisan Food Community updates.'
 WHERE NOT EXISTS (SELECT 1 FROM settings);
 
 -- =========================
@@ -476,7 +490,7 @@ SELECT
   '25%',
   '25% off everything, always · All events permanently included',
   5,
-  'active'
+  'inactive'
 WHERE NOT EXISTS (
   SELECT 1 FROM loyalty_tiers WHERE name = 'Gourmet VIP'
 );

@@ -30,14 +30,30 @@ dotenv.config();
 const app = express();
 
 /* =========================
-   Middlewares
+   CORS
 ========================= */
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Not allowed by CORS: ${origin}`));
+      }
+    },
     credentials: true,
   })
 );
+
+/* =========================
+   Middlewares
+========================= */
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,20 +61,22 @@ app.use(express.urlencoded({ extended: true }));
 /* =========================
    Static Uploads Folder
 ========================= */
+
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 /* =========================
    Test Routes
 ========================= */
+
 app.get('/', (req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
     message: 'Steffi Metz API is running',
   });
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
     message: 'Backend connected successfully',
   });
@@ -67,6 +85,7 @@ app.get('/api/health', (req, res) => {
 /* =========================
    API Routes
 ========================= */
+
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/homepage', homepageRoutes);
@@ -87,12 +106,14 @@ app.use('/api/marquee', marqueeRoutes);
 /* =========================
    Error Handling
 ========================= */
+
 app.use(notFound);
 app.use(errorHandler);
 
 /* =========================
    Start Server
 ========================= */
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

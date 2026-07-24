@@ -7,6 +7,8 @@ import Events from './Events';
 import Loyalty from './Loyalty';
 import Community from './Community';
 import Marquee from '../components/Marquee';
+import CatalogueCTA from '../components/CatalogueCTA';
+import FindShop from '../components/FindShop';
 
 import { getHomepage } from '../api/homepageApi';
 import { getAbout } from '../api/aboutApi';
@@ -242,12 +244,12 @@ export default function Home() {
       <div id="loyalty">
         <Loyalty />
       </div>
-
       <div id="community">
         <Community />
       </div>
-
-      <Newsletter />
+      <CatalogueCTA />
+       <Newsletter />
+       <FindShop />
     </>
   );
 }

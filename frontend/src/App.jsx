@@ -27,6 +27,7 @@ import PaymentsManager from './admin/PaymentsManager';
 import NewsletterManager from './admin/NewsletterManager';
 import UsersManager from './admin/UsersManager';
 import SettingsManager from './admin/SettingsManager';
+import MarqueeManager from './admin/MarqueeManager';
 
 export default function App() {
   return (
@@ -103,6 +104,7 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="homepage" element={<HomepageManager />} />
           <Route path="about" element={<AboutManager />} />
+          <Route path="marquee" element={<MarqueeManager />} />
           <Route path="boxes" element={<BoxesManager />} />
           <Route path="events" element={<EventsManager />} />
           <Route path="loyalty" element={<LoyaltyManager />} />
@@ -114,6 +116,7 @@ export default function App() {
           <Route path="newsletter" element={<NewsletterManager />} />
           <Route path="users" element={<UsersManager />} />
           <Route path="settings" element={<SettingsManager />} />
+
         </Route>
       </Route>
     </Routes>

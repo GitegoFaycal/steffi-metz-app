@@ -1,2 +1,14 @@
 @tailwind base;@tailwind components;@tailwind utilities;
-html{scroll-behavior:smooth} body{font-family:'Jost',sans-serif;background:#faf7f2;color:#1e1a14;overflow-x:hidden}.section{padding:5rem 0}.eyebrow{@apply text-[0.64rem] tracking-[0.26em] uppercase text-bordeaux font-light flex items-center gap-3}.eyebrow:before{content:'';width:20px;height:1px;background:#8c1c3a}.heading{@apply font-serif text-4xl md:text-5xl font-light leading-tight text-olive-dark}.heading em{@apply text-bordeaux italic}.btn{@apply inline-flex items-center justify-center gap-2 px-6 py-3 text-xs tracking-[0.16em] uppercase transition}.btn-primary{@apply btn bg-bordeaux text-white hover:bg-[#b03358] hover:-translate-y-0.5}.btn-outline{@apply btn border border-white/25 text-white/80 hover:text-white hover:border-white/60}.card{@apply bg-white border border-olive/10 shadow-sm hover:shadow-xl transition overflow-hidden}.input{@apply w-full bg-white border border-olive/20 px-4 py-3 outline-none focus:border-bordeaux}
+html{scroll-behavior:smooth} body{font-family:'Jost',sans-serif;background:#faf7f2;color:#1e1a14;overflow-x:hidden}.section{padding:5rem 0}.eyebrow{@apply text-[0.64rem] tracking-[0.26em] uppercase text-bordeaux font-light flex items-center gap-3}.eyebrow:before{content:'';width:20px;height:1px;background:#8c1c3a}.heading{@apply font-serif text-4xl md:text-5xl font-light leading-tight text-olive-dark}.heading em{@apply text-bordeaux italic}.btn{@apply inline-flex items-center justify-center gap-2 px-6 py-3 text-xs tracking-[0.16em] uppercase transition}.btn-primary{@apply btn bg-bordeaux text-white hover:bg-[#b03358] hover:-translate-y-0.5}.btn-outline{@apply btn border border-white/25 text-white/80 hover:text-white hover:border-white/60}.card{@apply bg-white border border-olive/10 shadow-sm hover:shadow-xl transition overflow-hidden}.input{@apply w-full bg-white border border-olive/20 px-4 py-3 outline-none focus:border-bordeaux} @keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}

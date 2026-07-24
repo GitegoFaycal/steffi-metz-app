@@ -14,6 +14,7 @@ import {
   Newspaper,
   Users,
   Settings,
+  ScrollText,
 } from 'lucide-react';
 
 const menuItems = [
@@ -27,6 +28,11 @@ const menuItems = [
     path: '/admin/homepage',
     icon: Home,
   },
+  {
+  label: 'Marquee',
+  path: '/admin/marquee',
+  icon: ScrollText,
+},
   {
     label: 'About',
     path: '/admin/about',

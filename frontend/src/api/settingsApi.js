@@ -19,3 +19,13 @@ export const updateSettingsWithLogo = async (formData) => {
 
   return response.data;
 };
+
+export const updateShopImage = async (formData) => {
+  const response = await api.put('/settings/shop-image', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return response.data;
+};

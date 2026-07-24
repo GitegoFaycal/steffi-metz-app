@@ -1,26 +1,44 @@
-const products = [
-  'Sourdough Bread',
-  'Artisan Cheese',
-  'House Granola',
-  'Rosemary Focaccia',
-  'Homemade Hummus',
-  'Kombucha',
-  'Almond Butter',
-  'Fresh Pretzels',
+import { useEffect, useState } from 'react';
+import { getMarqueeItems } from '../api/marqueeApi';
+
+const defaultItems = [
+  'Fresh sourdough daily',
+  'Handmade in Kigali',
+  'Gourmet boxes available',
+  'Cooking classes and events',
 ];
 
 export default function Marquee() {
-  const repeatedProducts = [...products, ...products];
+  const [items, setItems] = useState(defaultItems);
+
+  useEffect(() => {
+    async function loadMarqueeItems() {
+      try {
+        const data = await getMarqueeItems();
+        const apiItems = data.items || [];
+
+        if (apiItems.length > 0) {
+          setItems(apiItems.map((item) => item.text));
+        }
+      } catch (error) {
+        console.error('Failed to load marquee items:', error);
+      }
+    }
+
+    loadMarqueeItems();
+  }, []);
+
+  const repeatedItems = [...items, ...items, ...items];
 
   return (
-    <div className="w-full overflow-hidden bg-bordeaux py-3">
-      <div className="flex w-max whitespace-nowrap animate-marquee">
-        {repeatedProducts.map((product, index) => (
+    <div className="bg-bordeaux text-white overflow-hidden py-3">
+      <div className="flex whitespace-nowrap animate-marquee">
+        {repeatedItems.map((item, index) => (
           <span
-            key={`${product}-${index}`}
-            className="font-serif italic text-white/70 px-10 relative after:content-['·'] after:absolute after:right-0 after:text-white/35"
+            key={`${item}-${index}`}
+            className="uppercase tracking-[.18em] text-xs mx-8 text-white/80"
           >
-            {product}
+            {item}
           </span>
         ))}
       </div>

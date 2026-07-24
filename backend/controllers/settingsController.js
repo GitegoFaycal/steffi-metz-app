@@ -1,11 +1,6 @@
 import db from '../config/db.js';
 import deleteFile from '../utils/deleteFile.js';
 
-/**
- * GET /api/settings
- * Public route
- * Get website settings
- */
 export async function getSettings(req, res) {
   try {
     const [rows] = await db.query(
@@ -34,11 +29,6 @@ export async function getSettings(req, res) {
   }
 }
 
-/**
- * PUT /api/settings
- * Private/Admin route
- * Update website settings (except logo)
- */
 export async function updateSettings(req, res) {
   try {
     const {
@@ -49,6 +39,12 @@ export async function updateSettings(req, res) {
       instagram,
       facebook,
       tiktok,
+      catalogue_title,
+      catalogue_description,
+      newsletter_title,
+      newsletter_description,
+      shop_title,
+      opening_hours,
     } = req.body;
 
     const [existingRows] = await db.query(
@@ -65,9 +61,15 @@ export async function updateSettings(req, res) {
           address,
           instagram,
           facebook,
-          tiktok
+          tiktok,
+          catalogue_title,
+          catalogue_description,
+          newsletter_title,
+          newsletter_description,
+          shop_title,
+          opening_hours
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
         [
           site_name || '',
@@ -77,6 +79,12 @@ export async function updateSettings(req, res) {
           instagram || '',
           facebook || '',
           tiktok || '',
+          catalogue_title || '',
+          catalogue_description || '',
+          newsletter_title || '',
+          newsletter_description || '',
+          shop_title || '',
+          opening_hours || '',
         ]
       );
 
@@ -104,7 +112,13 @@ export async function updateSettings(req, res) {
         address = ?,
         instagram = ?,
         facebook = ?,
-        tiktok = ?
+        tiktok = ?,
+        catalogue_title = ?,
+        catalogue_description = ?,
+        newsletter_title = ?,
+        newsletter_description = ?,
+        shop_title = ?,
+        opening_hours = ?
       WHERE id = ?
       `,
       [
@@ -115,6 +129,12 @@ export async function updateSettings(req, res) {
         instagram || '',
         facebook || '',
         tiktok || '',
+        catalogue_title || '',
+        catalogue_description || '',
+        newsletter_title || '',
+        newsletter_description || '',
+        shop_title || '',
+        opening_hours || '',
         settingsId,
       ]
     );
@@ -140,11 +160,6 @@ export async function updateSettings(req, res) {
   }
 }
 
-/**
- * PUT /api/settings/logo
- * Private/Admin route
- * Upload or update website logo
- */
 export async function updateSettingsLogo(req, res) {
   try {
     if (!req.file) {
@@ -160,17 +175,10 @@ export async function updateSettingsLogo(req, res) {
       'SELECT * FROM settings ORDER BY id ASC LIMIT 1'
     );
 
-    // Create settings row if it doesn't exist
     if (existingRows.length === 0) {
       const [result] = await db.query(
-        `
-        INSERT INTO settings (
-          site_name,
-          logo
-        )
-        VALUES (?, ?)
-        `,
-        ['Website', newLogo]
+        'INSERT INTO settings (site_name, logo) VALUES (?, ?)',
+        ['Steffi Metz', newLogo]
       );
 
       const [newRows] = await db.query(
@@ -187,11 +195,7 @@ export async function updateSettingsLogo(req, res) {
 
     const settings = existingRows[0];
 
-    // Delete previous uploaded logo
-    if (
-      settings.logo &&
-      settings.logo.startsWith('/uploads/')
-    ) {
+    if (settings.logo && settings.logo.startsWith('/uploads/')) {
       deleteFile(settings.logo);
     }
 
@@ -216,6 +220,71 @@ export async function updateSettingsLogo(req, res) {
     return res.status(500).json({
       success: false,
       message: 'Failed to update logo.',
+      error: error.message,
+    });
+  }
+}
+
+export async function updateShopImage(req, res) {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Shop image is required.',
+      });
+    }
+
+    const newShopImage = `/uploads/settings/${req.file.filename}`;
+
+    const [existingRows] = await db.query(
+      'SELECT * FROM settings ORDER BY id ASC LIMIT 1'
+    );
+
+    if (existingRows.length === 0) {
+      const [result] = await db.query(
+        'INSERT INTO settings (site_name, shop_image) VALUES (?, ?)',
+        ['Steffi Metz', newShopImage]
+      );
+
+      const [newRows] = await db.query(
+        'SELECT * FROM settings WHERE id = ?',
+        [result.insertId]
+      );
+
+      return res.status(201).json({
+        success: true,
+        message: 'Shop image uploaded successfully.',
+        settings: newRows[0],
+      });
+    }
+
+    const settings = existingRows[0];
+
+    if (settings.shop_image && settings.shop_image.startsWith('/uploads/')) {
+      deleteFile(settings.shop_image);
+    }
+
+    await db.query(
+      'UPDATE settings SET shop_image = ? WHERE id = ?',
+      [newShopImage, settings.id]
+    );
+
+    const [updatedRows] = await db.query(
+      'SELECT * FROM settings WHERE id = ?',
+      [settings.id]
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: 'Shop image updated successfully.',
+      settings: updatedRows[0],
+    });
+  } catch (error) {
+    console.error('UPDATE SHOP IMAGE ERROR:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to update shop image.',
       error: error.message,
     });
   }

@@ -22,6 +22,7 @@ const defaultForm = {
   newsletter_description: '',
   shop_title: '',
   opening_hours: '',
+  footer_description: '',
 };
 
 function getImageUrl(imagePath) {
@@ -71,6 +72,7 @@ export default function SettingsManager() {
         newsletter_description: settings.newsletter_description || '',
         shop_title: settings.shop_title || '',
         opening_hours: settings.opening_hours || '',
+        footer_description: settings.footer_description || '',
       });
 
       if (settings.logo) {
@@ -182,6 +184,15 @@ export default function SettingsManager() {
               placeholder="Steffi Metz"
               required
             />
+            <FormInput
+            label="Footer Description"
+            name="footer_description"
+            value={form.footer_description}
+            onChange={handleChange}
+             textarea
+             rows={4}
+             placeholder="Artisan foods, catering, gourmet gift boxes..."
+             />
 
             <FormInput
               label="WhatsApp Number"

@@ -45,6 +45,7 @@ export async function updateSettings(req, res) {
       newsletter_description,
       shop_title,
       opening_hours,
+      footer_description,
     } = req.body;
 
     const [existingRows] = await db.query(
@@ -119,6 +120,7 @@ export async function updateSettings(req, res) {
         newsletter_description = ?,
         shop_title = ?,
         opening_hours = ?
+        footer_description = ?
       WHERE id = ?
       `,
       [
@@ -136,6 +138,7 @@ export async function updateSettings(req, res) {
         shop_title || '',
         opening_hours || '',
         settingsId,
+        footer_description || '',
       ]
     );
 

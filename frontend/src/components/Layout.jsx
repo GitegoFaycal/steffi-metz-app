@@ -1,23 +1,105 @@
-import { Link } from "react-router-dom";
-import { Menu, X, MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import {
+  FaWhatsapp,
+  FaInstagram,
+  FaFacebookF,
+  FaTiktok,
+} from 'react-icons/fa';
+import { getSettings } from '../api/settingsApi';
 
-const logo = "/assets/image-1.png";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const SERVER_URL = API_BASE_URL.replace(/\/api\/?$/, '');
+
+const defaultSettings = {
+  site_name: 'Steffi Metz',
+  logo: '/assets/image-1.png',
+  whatsapp_number: '+250 785 211 051',
+  email: 'hello@steffimetz.rw',
+  address: 'Kigali, Rwanda',
+  instagram: '',
+  facebook: '',
+  tiktok: '',
+  footer_description:
+    'Artisan foods, catering, gourmet gift boxes, cooking classes and unforgettable culinary experiences handcrafted in Kigali.',
+};
+
+function getImageUrl(imagePath) {
+  if (!imagePath) {
+    return defaultSettings.logo;
+  }
+
+  if (imagePath.startsWith('http')) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith('/uploads')) {
+    return `${SERVER_URL}${imagePath}`;
+  }
+
+  return imagePath;
+}
+
+function cleanWhatsAppNumber(number) {
+  return String(number || '')
+    .replace(/\+/g, '')
+    .replace(/\s/g, '')
+    .replace(/-/g, '');
+}
+
+function openExternalLink(url) {
+  if (!url) {
+    return;
+  }
+
+  const finalUrl = url.startsWith('http') ? url : `https://${url}`;
+
+  window.open(finalUrl, '_blank', 'noopener,noreferrer');
+}
 
 export default function Layout({ children }) {
   const [open, setOpen] = useState(false);
+  const [settings, setSettings] = useState(defaultSettings);
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const data = await getSettings();
+
+        setSettings({
+          ...defaultSettings,
+          ...(data?.settings || {}),
+        });
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+        setSettings(defaultSettings);
+      }
+    }
+
+    loadSettings();
+  }, []);
+
+  const logoUrl = getImageUrl(settings.logo);
+  const siteName = settings.site_name || defaultSettings.site_name;
+
+  const whatsappNumber = cleanWhatsAppNumber(
+    settings.whatsapp_number || defaultSettings.whatsapp_number
+  );
 
   const links = [
-    ["boxes", "Boxes"],
-    ["events", "Events"],
-    ["loyalty", "Loyalty"],
-    ["community", "Community"],
+    ['boxes', 'Boxes'],
+    ['events', 'Events'],
+    ['loyalty', 'Loyalty'],
+    ['community', 'Community'],
   ];
 
   const scrollToSection = (id) => {
     setOpen(false);
 
-    if (window.location.pathname !== "/") {
+    if (window.location.pathname !== '/') {
       window.location.href = `/#${id}`;
       return;
     }
@@ -26,43 +108,50 @@ export default function Layout({ children }) {
 
     if (section) {
       section.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
+        behavior: 'smooth',
+        block: 'start',
       });
     }
   };
 
+  const openCatalogue = () => {
+    window.open(
+      `https://wa.me/c/${whatsappNumber}`,
+      '_blank',
+      'noopener,noreferrer'
+    );
+  };
+
+  const openWhatsApp = () => {
+    window.open(
+      `https://wa.me/${whatsappNumber}`,
+      '_blank',
+      'noopener,noreferrer'
+    );
+  };
+
   return (
     <>
-      {/* ================= NAVBAR ================= */}
-
+      {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 h-20 bg-transparent">
         <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
-
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
+  <img
+    src={logoUrl}
+    alt={siteName}
+    className="h-12 w-auto object-contain"
+  />
 
-            <img
-              src={logo}
-              alt="Steffi Metz"
-              className="h-12 w-auto object-contain"
-            />
-
-            <span
-              className="hidden md:block text-2xl font-serif text-cream [text-shadow:0_2px_8px_rgba(0,0,0,.8)]"
-            >
-              Steffi Metz
-            </span>
-
-          </Link>
-
-          {/* Desktop Menu */}
+  <span className="hidden md:block text-2xl font-serif text-cream">
+    {siteName}
+  </span>
+</Link>
 
           <div className="hidden lg:flex items-center gap-8">
-
             {links.map(([id, label]) => (
               <button
                 key={id}
+                type="button"
                 onClick={() => scrollToSection(id)}
                 className="uppercase tracking-[.15em] text-xs text-cream hover:text-orange-200 transition [text-shadow:0_2px_8px_rgba(0,0,0,.8)]"
               >
@@ -70,21 +159,18 @@ export default function Layout({ children }) {
               </button>
             ))}
 
-            <a
-              href="https://wa.me/c/250785211051"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={openCatalogue}
               className="flex items-center gap-2 bg-[#25D366] text-white px-5 py-2 rounded-full hover:scale-105 transition"
             >
-              <MessageCircle size={16} />
+              <FaWhatsapp size={16} />
               Catalogue
-            </a>
-
+            </button>
           </div>
 
-          {/* Mobile Button */}
-
           <button
+            type="button"
             onClick={() => setOpen(true)}
             className="lg:hidden"
           >
@@ -93,16 +179,14 @@ export default function Layout({ children }) {
               className="text-white [filter:drop-shadow(0_2px_8px_rgba(0,0,0,.8))]"
             />
           </button>
-
         </div>
       </nav>
 
-      {/* ================= MOBILE MENU ================= */}
-
+      {/* Mobile Menu */}
       {open && (
         <div className="fixed inset-0 z-[60] bg-olive-dark/95 flex flex-col items-center justify-center gap-8">
-
           <button
+            type="button"
             onClick={() => setOpen(false)}
             className="absolute top-6 right-6 text-white"
           >
@@ -112,6 +196,7 @@ export default function Layout({ children }) {
           {links.map(([id, label]) => (
             <button
               key={id}
+              type="button"
               onClick={() => scrollToSection(id)}
               className="text-3xl font-serif text-white hover:text-bordeaux transition"
             >
@@ -119,27 +204,25 @@ export default function Layout({ children }) {
             </button>
           ))}
 
-          <a
-            href="https://wa.me/c/250785211051"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              openCatalogue();
+            }}
             className="flex items-center gap-3 text-[#25D366] text-2xl"
           >
-            <MessageCircle />
+            <FaWhatsapp size={28} />
             Catalogue
-          </a>
-
+          </button>
         </div>
       )}
 
-      {/* ================= CONTENT ================= */}
-
+      {/* Main Content */}
       <main>{children}</main>
 
-      {/* ================= LOYALTY BAR ================= */}
-
+      {/* Loyalty Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-olive-dark border-t border-bordeaux px-4 py-2 flex items-center gap-3">
-
         <span className="bg-bordeaux text-white text-[10px] uppercase tracking-widest px-2 py-1 rounded">
           🌱 Gourmet Curious
         </span>
@@ -153,75 +236,123 @@ export default function Layout({ children }) {
         </span>
 
         <button
-          onClick={() => scrollToSection("loyalty")}
-          className="bg-bordeaux text-white text-xs uppercase tracking-wider px-3 py-2 rounded hover:opacity-90"
+          type="button"
+          onClick={() => scrollToSection('loyalty')}
+          className="bg-bordeaux text-white text-xs uppercase tracking-wider px-3 py-2 rounded hover:opacity-90 transition"
         >
           See Benefits →
         </button>
-
       </div>
 
-      {/* ================= FOOTER ================= */}
-
+      {/* Footer */}
       <footer className="bg-olive-dark text-white py-14 pb-24">
-
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-10">
-
+          {/* Brand */}
           <div>
+  <img
+    src={logoUrl}
+    alt={siteName}
+    className="h-16 w-auto mb-4 object-contain"
+  />
 
-            <img
-              src={logo}
-              alt="Steffi Metz"
-              className="h-16 w-auto mb-4"
-            />
+  <p className="text-white/60 leading-7 text-sm">
+    {settings.footer_description || defaultSettings.footer_description}
+  </p>
+</div>
 
-            <p className="text-white/60 leading-7 text-sm">
-              Artisan foods, catering, gourmet gift boxes, cooking classes and
-              unforgettable culinary experiences handcrafted in Kigali.
-            </p>
-
-          </div>
-
+          {/* Contact */}
           <div>
-
             <h3 className="font-serif text-2xl mb-4">
               Contact
             </h3>
 
             <p className="text-white/60 text-sm leading-7">
-              Kigali, Rwanda
+              {settings.address || defaultSettings.address}
               <br />
-              WhatsApp: +250 785 211 051
+              WhatsApp:{' '}
+              {settings.whatsapp_number || defaultSettings.whatsapp_number}
               <br />
-              Email: hello@steffimetz.rw
+              Email: {settings.email || defaultSettings.email}
             </p>
 
+            <div className="flex items-center gap-4 mt-5">
+              <button
+                type="button"
+                onClick={openWhatsApp}
+                className="w-9 h-9 rounded-full border border-white/15 text-white/60 flex items-center justify-center hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition"
+                aria-label="Open WhatsApp"
+                title="WhatsApp"
+              >
+                <FaWhatsapp size={17} />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => openExternalLink(settings.instagram)}
+                disabled={!settings.instagram}
+                className={`w-9 h-9 rounded-full border border-white/15 flex items-center justify-center transition ${
+                  settings.instagram
+                    ? 'text-white/60 hover:bg-bordeaux hover:text-white hover:border-bordeaux'
+                    : 'text-white/25 cursor-not-allowed'
+                }`}
+                aria-label="Open Instagram"
+                title="Instagram"
+              >
+                <FaInstagram size={17} />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => openExternalLink(settings.facebook)}
+                disabled={!settings.facebook}
+                className={`w-9 h-9 rounded-full border border-white/15 flex items-center justify-center transition ${
+                  settings.facebook
+                    ? 'text-white/60 hover:bg-bordeaux hover:text-white hover:border-bordeaux'
+                    : 'text-white/25 cursor-not-allowed'
+                }`}
+                aria-label="Open Facebook"
+                title="Facebook"
+              >
+                <FaFacebookF size={15} />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => openExternalLink(settings.tiktok)}
+                disabled={!settings.tiktok}
+                className={`w-9 h-9 rounded-full border border-white/15 flex items-center justify-center transition ${
+                  settings.tiktok
+                    ? 'text-white/60 hover:bg-bordeaux hover:text-white hover:border-bordeaux'
+                    : 'text-white/25 cursor-not-allowed'
+                }`}
+                aria-label="Open TikTok"
+                title="TikTok"
+              >
+                <FaTiktok size={15} />
+              </button>
+            </div>
           </div>
 
+          {/* Quick Links */}
           <div>
-
             <h3 className="font-serif text-2xl mb-4">
               Quick Links
             </h3>
 
             <div className="flex flex-col gap-3 text-white/60">
-
               {links.map(([id, label]) => (
                 <button
                   key={id}
+                  type="button"
                   onClick={() => scrollToSection(id)}
                   className="text-left hover:text-white transition"
                 >
                   {label}
                 </button>
               ))}
-
             </div>
-
           </div>
-
         </div>
-
       </footer>
     </>
   );

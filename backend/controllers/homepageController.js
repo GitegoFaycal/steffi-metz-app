@@ -1,11 +1,7 @@
 import db from '../config/db.js';
 import deleteFile from '../utils/deleteFile.js';
+import getUploadedFileUrl from '../utils/getUploadedFileUrl.js';
 
-/**
- * GET /api/homepage
- * Public route
- * Gets homepage content
- */
 export async function getHomepage(req, res) {
   try {
     const [rows] = await db.query(
@@ -34,11 +30,6 @@ export async function getHomepage(req, res) {
   }
 }
 
-/**
- * PUT /api/homepage
- * Private/admin route
- * Updates homepage text content only
- */
 export async function updateHomepage(req, res) {
   try {
     const {
@@ -68,12 +59,12 @@ export async function updateHomepage(req, res) {
         VALUES (?, ?, ?, ?, ?, ?)
         `,
         [
-          location_text,
-          hero_title,
-          hero_highlight,
-          hero_description,
-          button_one_text,
-          button_two_text,
+          location_text || '',
+          hero_title || '',
+          hero_highlight || '',
+          hero_description || '',
+          button_one_text || '',
+          button_two_text || '',
         ]
       );
 
@@ -89,7 +80,7 @@ export async function updateHomepage(req, res) {
       });
     }
 
-    const homepageId = existingRows[0].id;
+    const homepage = existingRows[0];
 
     await db.query(
       `
@@ -104,19 +95,19 @@ export async function updateHomepage(req, res) {
       WHERE id = ?
       `,
       [
-        location_text,
-        hero_title,
-        hero_highlight,
-        hero_description,
-        button_one_text,
-        button_two_text,
-        homepageId,
+        location_text || '',
+        hero_title || '',
+        hero_highlight || '',
+        hero_description || '',
+        button_one_text || '',
+        button_two_text || '',
+        homepage.id,
       ]
     );
 
     const [updatedRows] = await db.query(
       'SELECT * FROM homepage WHERE id = ?',
-      [homepageId]
+      [homepage.id]
     );
 
     return res.status(200).json({
@@ -135,11 +126,6 @@ export async function updateHomepage(req, res) {
   }
 }
 
-/**
- * PUT /api/homepage/upload
- * Private/admin route
- * Updates homepage text content and hero image
- */
 export async function updateHomepageWithImage(req, res) {
   try {
     const {
@@ -156,7 +142,7 @@ export async function updateHomepageWithImage(req, res) {
     );
 
     const heroImage = req.file
-      ? `/uploads/homepage/${req.file.filename}`
+      ? getUploadedFileUrl(req.file)
       : null;
 
     if (existingRows.length === 0) {
@@ -174,12 +160,12 @@ export async function updateHomepageWithImage(req, res) {
         VALUES (?, ?, ?, ?, ?, ?, ?)
         `,
         [
-          location_text,
-          hero_title,
-          hero_highlight,
-          hero_description,
-          button_one_text,
-          button_two_text,
+          location_text || '',
+          hero_title || '',
+          hero_highlight || '',
+          hero_description || '',
+          button_one_text || '',
+          button_two_text || '',
           heroImage,
         ]
       );
@@ -198,11 +184,7 @@ export async function updateHomepageWithImage(req, res) {
 
     const homepage = existingRows[0];
 
-    if (
-      heroImage &&
-      homepage.hero_image &&
-      homepage.hero_image.startsWith('/uploads/')
-    ) {
+    if (heroImage && homepage.hero_image) {
       deleteFile(homepage.hero_image);
     }
 
@@ -222,12 +204,12 @@ export async function updateHomepageWithImage(req, res) {
       WHERE id = ?
       `,
       [
-        location_text,
-        hero_title,
-        hero_highlight,
-        hero_description,
-        button_one_text,
-        button_two_text,
+        location_text || '',
+        hero_title || '',
+        hero_highlight || '',
+        hero_description || '',
+        button_one_text || '',
+        button_two_text || '',
         finalHeroImage,
         homepage.id,
       ]

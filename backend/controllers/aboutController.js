@@ -1,11 +1,7 @@
 import db from '../config/db.js';
 import deleteFile from '../utils/deleteFile.js';
+import getUploadedFileUrl from '../utils/getUploadedFileUrl.js';
 
-/**
- * GET /api/about
- * Public route
- * Gets about section content
- */
 export async function getAbout(req, res) {
   try {
     const [rows] = await db.query(
@@ -34,14 +30,14 @@ export async function getAbout(req, res) {
   }
 }
 
-/**
- * PUT /api/about
- * Private/admin route
- * Updates about text content only
- */
 export async function updateAbout(req, res) {
   try {
-    const { eyebrow, title, description, quote } = req.body;
+    const {
+      eyebrow,
+      title,
+      description,
+      quote,
+    } = req.body;
 
     const [existingRows] = await db.query(
       'SELECT * FROM about ORDER BY id ASC LIMIT 1'
@@ -58,7 +54,12 @@ export async function updateAbout(req, res) {
         )
         VALUES (?, ?, ?, ?)
         `,
-        [eyebrow, title, description, quote]
+        [
+          eyebrow || '',
+          title || '',
+          description || '',
+          quote || '',
+        ]
       );
 
       const [newRows] = await db.query(
@@ -73,7 +74,7 @@ export async function updateAbout(req, res) {
       });
     }
 
-    const aboutId = existingRows[0].id;
+    const about = existingRows[0];
 
     await db.query(
       `
@@ -85,12 +86,18 @@ export async function updateAbout(req, res) {
         quote = ?
       WHERE id = ?
       `,
-      [eyebrow, title, description, quote, aboutId]
+      [
+        eyebrow || '',
+        title || '',
+        description || '',
+        quote || '',
+        about.id,
+      ]
     );
 
     const [updatedRows] = await db.query(
       'SELECT * FROM about WHERE id = ?',
-      [aboutId]
+      [about.id]
     );
 
     return res.status(200).json({
@@ -109,25 +116,25 @@ export async function updateAbout(req, res) {
   }
 }
 
-/**
- * PUT /api/about/upload
- * Private/admin route
- * Updates about text content and images
- */
 export async function updateAboutWithImage(req, res) {
   try {
-    const { eyebrow, title, description, quote } = req.body;
+    const {
+      eyebrow,
+      title,
+      description,
+      quote,
+    } = req.body;
 
     const [existingRows] = await db.query(
       'SELECT * FROM about ORDER BY id ASC LIMIT 1'
     );
 
     const imageOne = req.files?.image_one
-      ? `/uploads/about/${req.files.image_one[0].filename}`
+      ? getUploadedFileUrl(req.files.image_one[0])
       : null;
 
     const imageTwo = req.files?.image_two
-      ? `/uploads/about/${req.files.image_two[0].filename}`
+      ? getUploadedFileUrl(req.files.image_two[0])
       : null;
 
     if (existingRows.length === 0) {
@@ -143,7 +150,14 @@ export async function updateAboutWithImage(req, res) {
         )
         VALUES (?, ?, ?, ?, ?, ?)
         `,
-        [eyebrow, title, description, quote, imageOne, imageTwo]
+        [
+          eyebrow || '',
+          title || '',
+          description || '',
+          quote || '',
+          imageOne,
+          imageTwo,
+        ]
       );
 
       const [newRows] = await db.query(
@@ -160,19 +174,11 @@ export async function updateAboutWithImage(req, res) {
 
     const about = existingRows[0];
 
-    if (
-      imageOne &&
-      about.image_one &&
-      about.image_one.startsWith('/uploads/')
-    ) {
+    if (imageOne && about.image_one) {
       deleteFile(about.image_one);
     }
 
-    if (
-      imageTwo &&
-      about.image_two &&
-      about.image_two.startsWith('/uploads/')
-    ) {
+    if (imageTwo && about.image_two) {
       deleteFile(about.image_two);
     }
 
@@ -192,10 +198,10 @@ export async function updateAboutWithImage(req, res) {
       WHERE id = ?
       `,
       [
-        eyebrow,
-        title,
-        description,
-        quote,
+        eyebrow || '',
+        title || '',
+        description || '',
+        quote || '',
         finalImageOne,
         finalImageTwo,
         about.id,

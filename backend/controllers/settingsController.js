@@ -1,5 +1,6 @@
 import db from '../config/db.js';
 import deleteFile from '../utils/deleteFile.js';
+import getUploadedFileUrl from '../utils/getUploadedFileUrl.js';
 
 export async function getSettings(req, res) {
   try {
@@ -199,7 +200,7 @@ export async function updateSettingsLogo(req, res) {
       });
     }
 
-    const newLogo = `/uploads/settings/${req.file.filename}`;
+    const newLogo = getUploadedFileUrl(req.file);
 
     const [existingRows] = await db.query(
       'SELECT * FROM settings ORDER BY id ASC LIMIT 1'
@@ -225,7 +226,7 @@ export async function updateSettingsLogo(req, res) {
 
     const settings = existingRows[0];
 
-    if (settings.logo && settings.logo.startsWith('/uploads/')) {
+    if (settings.logo) {
       deleteFile(settings.logo);
     }
 
@@ -264,7 +265,7 @@ export async function updateShopImage(req, res) {
       });
     }
 
-    const newShopImage = `/uploads/settings/${req.file.filename}`;
+    const newShopImage = getUploadedFileUrl(req.file);
 
     const [existingRows] = await db.query(
       'SELECT * FROM settings ORDER BY id ASC LIMIT 1'
@@ -290,7 +291,7 @@ export async function updateShopImage(req, res) {
 
     const settings = existingRows[0];
 
-    if (settings.shop_image && settings.shop_image.startsWith('/uploads/')) {
+    if (settings.shop_image) {
       deleteFile(settings.shop_image);
     }
 

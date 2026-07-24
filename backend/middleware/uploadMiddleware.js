@@ -1,52 +1,75 @@
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
+import dotenv from 'dotenv';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-function createStorage(folderName) {
-  const uploadPath = path.join(process.cwd(), 'uploads', folderName);
+dotenv.config();
 
-  if (!fs.existsSync(uploadPath)) {
-    fs.mkdirSync(uploadPath, { recursive: true });
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+
+const allowedMimeTypes = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+];
+
+function fileFilter(req, file, cb) {
+  const extension = path.extname(file.originalname).toLowerCase();
+
+  if (
+    allowedExtensions.includes(extension) &&
+    allowedMimeTypes.includes(file.mimetype)
+  ) {
+    cb(null, true);
+  } else {
+    cb(
+      new Error(
+        'Only JPG, JPEG, PNG, and WEBP image files are allowed.'
+      )
+    );
   }
+}
 
-  return multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, uploadPath);
-    },
+function createCloudinaryStorage(folderName) {
+  return new CloudinaryStorage({
+    cloudinary,
+    params: async (req, file) => {
+      const extension = path
+        .extname(file.originalname)
+        .toLowerCase()
+        .replace('.', '');
 
-    filename: (req, file, cb) => {
       const uniqueSuffix = `${Date.now()}-${Math.round(
         Math.random() * 1e9
       )}`;
 
-      const fileExtension = path.extname(file.originalname);
-
-      cb(null, `${uniqueSuffix}${fileExtension}`);
+      return {
+        folder: `steffi-metz/${folderName}`,
+        public_id: `${file.fieldname}-${uniqueSuffix}`,
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+        resource_type: 'image',
+        format: extension === 'jpg' ? 'jpg' : extension,
+      };
     },
   });
-}
-
-function fileFilter(req, file, cb) {
-  const allowedExtensions = /jpg|jpeg|png|webp/;
-  const fileExtension = path.extname(file.originalname).toLowerCase();
-  const mimeType = file.mimetype.toLowerCase();
-
-  const isValidExtension = allowedExtensions.test(fileExtension);
-  const isValidMimeType = mimeType.startsWith('image/');
-
-  if (isValidExtension && isValidMimeType) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only JPG, JPEG, PNG, and WEBP image files are allowed.'));
-  }
 }
 
 export function uploadTo(folderName) {
   return multer({
-    storage: createStorage(folderName),
+    storage: createCloudinaryStorage(folderName),
     fileFilter,
     limits: {
-      fileSize: 5 * 1024 * 1024,
+      fileSize: 15 * 1024 * 1024,
     },
   });
 }
+
+export { cloudinary };

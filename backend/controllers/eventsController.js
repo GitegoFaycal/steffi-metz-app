@@ -1,11 +1,7 @@
 import db from '../config/db.js';
 import deleteFile from '../utils/deleteFile.js';
+import getUploadedFileUrl from '../utils/getUploadedFileUrl.js';
 
-/**
- * GET /api/events
- * Public route
- * Get all active events
- */
 export async function getEvents(req, res) {
   try {
     const [events] = await db.query(
@@ -16,7 +12,6 @@ export async function getEvents(req, res) {
       success: true,
       events,
     });
-
   } catch (error) {
     console.error('GET EVENTS ERROR:', error);
 
@@ -28,12 +23,6 @@ export async function getEvents(req, res) {
   }
 }
 
-
-/**
- * GET /api/events/search?keyword=value
- * Public route
- * Search events
- */
 export async function searchEvents(req, res) {
   try {
     const keyword = req.query.keyword || '';
@@ -60,7 +49,6 @@ export async function searchEvents(req, res) {
       success: true,
       events,
     });
-
   } catch (error) {
     console.error('SEARCH EVENTS ERROR:', error);
 
@@ -72,12 +60,6 @@ export async function searchEvents(req, res) {
   }
 }
 
-
-/**
- * GET /api/events/:id
- * Public route
- * Get one event by ID
- */
 export async function getEventById(req, res) {
   try {
     const { id } = req.params;
@@ -98,7 +80,6 @@ export async function getEventById(req, res) {
       success: true,
       event: events[0],
     });
-
   } catch (error) {
     console.error('GET EVENT BY ID ERROR:', error);
 
@@ -110,12 +91,6 @@ export async function getEventById(req, res) {
   }
 }
 
-
-/**
- * POST /api/events
- * Private/admin route
- * Create new event with optional image upload
- */
 export async function createEvent(req, res) {
   try {
     const {
@@ -123,14 +98,12 @@ export async function createEvent(req, res) {
       price,
       badge,
       description,
-      status
+      status,
     } = req.body;
 
-
     const image = req.file
-      ? `/uploads/events/${req.file.filename}`
+      ? getUploadedFileUrl(req.file)
       : null;
-
 
     const [result] = await db.query(
       `
@@ -154,22 +127,17 @@ export async function createEvent(req, res) {
       ]
     );
 
-
     const [newEventRows] = await db.query(
       'SELECT * FROM events WHERE id = ?',
       [result.insertId]
     );
-
 
     return res.status(201).json({
       success: true,
       message: 'Event created successfully.',
       event: newEventRows[0],
     });
-
-
   } catch (error) {
-
     console.error('CREATE EVENT ERROR:', error);
 
     return res.status(500).json({
@@ -180,16 +148,8 @@ export async function createEvent(req, res) {
   }
 }
 
-
-/**
- * PUT /api/events/:id
- * Private/admin route
- * Update event with optional image upload
- */
 export async function updateEvent(req, res) {
-
   try {
-
     const { id } = req.params;
 
     const {
@@ -197,45 +157,32 @@ export async function updateEvent(req, res) {
       price,
       badge,
       description,
-      status
+      status,
     } = req.body;
-
 
     const [existingRows] = await db.query(
       'SELECT * FROM events WHERE id = ?',
       [id]
     );
 
-
     if (existingRows.length === 0) {
-
       return res.status(404).json({
         success: false,
         message: 'Event not found.',
       });
-
     }
-
 
     const existingEvent = existingRows[0];
 
-
     const newImage = req.file
-      ? `/uploads/events/${req.file.filename}`
+      ? getUploadedFileUrl(req.file)
       : null;
 
-
-    if (
-      newImage &&
-      existingEvent.image &&
-      existingEvent.image.startsWith('/uploads/')
-    ) {
+    if (newImage && existingEvent.image) {
       deleteFile(existingEvent.image);
     }
 
-
     const finalImage = newImage || existingEvent.image;
-
 
     await db.query(
       `
@@ -250,32 +197,27 @@ export async function updateEvent(req, res) {
       WHERE id = ?
       `,
       [
-        title,
-        price || '',
-        badge || '',
-        description || '',
+        title || existingEvent.title,
+        price || existingEvent.price || '',
+        badge || existingEvent.badge || '',
+        description || existingEvent.description || '',
         finalImage,
         status || existingEvent.status || 'active',
         id,
       ]
     );
 
-
     const [updatedRows] = await db.query(
       'SELECT * FROM events WHERE id = ?',
       [id]
     );
-
 
     return res.status(200).json({
       success: true,
       message: 'Event updated successfully.',
       event: updatedRows[0],
     });
-
-
   } catch (error) {
-
     console.error('UPDATE EVENT ERROR:', error);
 
     return res.status(500).json({
@@ -283,66 +225,40 @@ export async function updateEvent(req, res) {
       message: 'Failed to update event.',
       error: error.message,
     });
-
   }
 }
 
-
-/**
- * DELETE /api/events/:id
- * Private/admin route
- * Delete event and uploaded image
- */
 export async function deleteEvent(req, res) {
-
   try {
-
     const { id } = req.params;
-
 
     const [existingRows] = await db.query(
       'SELECT * FROM events WHERE id = ?',
       [id]
     );
 
-
     if (existingRows.length === 0) {
-
       return res.status(404).json({
         success: false,
         message: 'Event not found.',
       });
-
     }
-
 
     const event = existingRows[0];
 
-
-    if (
-      event.image &&
-      event.image.startsWith('/uploads/')
-    ) {
-
+    if (event.image) {
       deleteFile(event.image);
-
     }
-
 
     await db.query(
       'DELETE FROM events WHERE id = ?',
       [id]
     );
-
-
     return res.status(200).json({
       success: true,
       message: 'Event deleted successfully.',
     });
-
-
   } catch (error) {
-
     console.error('DELETE EVENT ERROR:', error);
 
     return res.status(500).json({
@@ -350,6 +266,5 @@ export async function deleteEvent(req, res) {
       message: 'Failed to delete event.',
       error: error.message,
     });
-
   }
 }

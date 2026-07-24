@@ -2,17 +2,27 @@ import fs from 'fs';
 import path from 'path';
 
 export default function deleteFile(filePath) {
-  if (!filePath) {
-    return;
-  }
+  try {
+    if (!filePath) {
+      return;
+    }
 
-  const clearPath = filePath.startsWith('/')
-    ? filePath.slice(1)
-    : filePath;
+    // If the image is stored on Cloudinary, it will be an https URL.
+    // For now, we skip deleting Cloudinary files.
+    if (filePath.startsWith('http')) {
+      return;
+    }
 
-  const fullPath = path.join(process.cwd(), clearPath);
+    const cleanPath = filePath.startsWith('/')
+      ? filePath.slice(1)
+      : filePath;
 
-  if (fs.existsSync(fullPath)) {
-    fs.unlinkSync(fullPath);
+    const fullPath = path.join(process.cwd(), cleanPath);
+
+    if (fs.existsSync(fullPath)) {
+      fs.unlinkSync(fullPath);
+    }
+  } catch (error) {
+    console.error('DELETE FILE ERROR:', error.message);
   }
 }

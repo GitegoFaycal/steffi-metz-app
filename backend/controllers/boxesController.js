@@ -1,5 +1,27 @@
 import db from '../config/db.js';
 import deleteFile from '../utils/deleteFile.js';
+import getUploadedFileUrl from '../utils/getUploadedFileUrl.js';
+
+function formatBox(box) {
+  return {
+    ...box,
+    items: box.items
+      ? box.items.split(',').map((item) => item.trim())
+      : [],
+  };
+}
+
+function formatItemsForDatabase(items, fallback = '') {
+  if (Array.isArray(items)) {
+    return items.join(', ');
+  }
+
+  if (typeof items === 'string') {
+    return items;
+  }
+
+  return fallback;
+}
 
 /**
  * GET /api/boxes
@@ -12,16 +34,9 @@ export async function getBoxes(req, res) {
       'SELECT * FROM boxes WHERE status = "active" ORDER BY id DESC'
     );
 
-    const formattedBoxes = boxes.map((box) => ({
-      ...box,
-      items: box.items
-        ? box.items.split(',').map((item) => item.trim())
-        : [],
-    }));
-
     return res.status(200).json({
       success: true,
-      boxes: formattedBoxes,
+      boxes: boxes.map(formatBox),
     });
   } catch (error) {
     console.error('GET BOXES ERROR:', error);
@@ -32,8 +47,7 @@ export async function getBoxes(req, res) {
       error: error.message,
     });
   }
-};
-
+}
 
 /**
  * GET /api/boxes/search?keyword=value
@@ -62,18 +76,10 @@ export async function searchBoxes(req, res) {
       ]
     );
 
-    const formattedBoxes = boxes.map((box) => ({
-      ...box,
-      items: box.items
-        ? box.items.split(',').map((item) => item.trim())
-        : [],
-    }));
-
     return res.status(200).json({
       success: true,
-      boxes: formattedBoxes,
+      boxes: boxes.map(formatBox),
     });
-
   } catch (error) {
     console.error('SEARCH BOXES ERROR:', error);
 
@@ -83,9 +89,7 @@ export async function searchBoxes(req, res) {
       error: error.message,
     });
   }
-};
-
-
+}
 /**
  * GET /api/boxes/:id
  * Public route
@@ -107,18 +111,10 @@ export async function getBoxById(req, res) {
       });
     }
 
-    const box = boxes[0];
-
     return res.status(200).json({
       success: true,
-      box: {
-        ...box,
-        items: box.items
-          ? box.items.split(',').map((item) => item.trim())
-          : [],
-      },
+      box: formatBox(boxes[0]),
     });
-
   } catch (error) {
     console.error('GET BOX BY ID ERROR:', error);
 
@@ -128,13 +124,12 @@ export async function getBoxById(req, res) {
       error: error.message,
     });
   }
-};
-
+}
 
 /**
  * POST /api/boxes
  * Private/admin route
- * Create new box with optional image upload
+ * Create new box
  */
 export async function createBox(req, res) {
   try {
@@ -143,19 +138,14 @@ export async function createBox(req, res) {
       price,
       serves,
       items,
-      status
+      status,
     } = req.body;
 
-
     const image = req.file
-      ? `/uploads/boxes/${req.file.filename}`
+      ? getUploadedFileUrl(req.file)
       : null;
 
-
-    const formattedItems = Array.isArray(items)
-      ? items.join(', ')
-      : items || '';
-
+    const formattedItems = formatItemsForDatabase(items);
 
     const [result] = await db.query(
       `
@@ -179,30 +169,17 @@ export async function createBox(req, res) {
       ]
     );
 
-
     const [newBoxRows] = await db.query(
       'SELECT * FROM boxes WHERE id = ?',
       [result.insertId]
     );
 
-
-    const box = newBoxRows[0];
-
-
     return res.status(201).json({
       success: true,
       message: 'Box created successfully.',
-      box: {
-        ...box,
-        items: box.items
-          ? box.items.split(',').map((item) => item.trim())
-          : [],
-      },
+      box: formatBox(newBoxRows[0]),
     });
-
-
   } catch (error) {
-
     console.error('CREATE BOX ERROR:', error);
 
     return res.status(500).json({
@@ -211,8 +188,7 @@ export async function createBox(req, res) {
       error: error.message,
     });
   }
-};
-
+}
 
 /**
  * PUT /api/boxes/:id
@@ -220,9 +196,7 @@ export async function createBox(req, res) {
  * Update box
  */
 export async function updateBox(req, res) {
-
   try {
-
     const { id } = req.params;
 
     const {
@@ -230,53 +204,37 @@ export async function updateBox(req, res) {
       price,
       serves,
       items,
-      status
+      status,
     } = req.body;
-
 
     const [existingRows] = await db.query(
       'SELECT * FROM boxes WHERE id = ?',
       [id]
     );
 
-
     if (existingRows.length === 0) {
-
       return res.status(404).json({
         success: false,
         message: 'Box not found.',
       });
-
     }
-
 
     const existingBox = existingRows[0];
 
-
     const newImage = req.file
-      ? `/uploads/boxes/${req.file.filename}`
+      ? getUploadedFileUrl(req.file)
       : null;
 
-
-    if (
-      newImage &&
-      existingBox.image &&
-      existingBox.image.startsWith('/uploads/')
-    ) {
-
+    if (newImage && existingBox.image) {
       deleteFile(existingBox.image);
-
     }
-
 
     const finalImage = newImage || existingBox.image;
 
-
-    const formattedItems = Array.isArray(items)
-      ? items.join(', ')
-      : items || '';
-
-
+    const formattedItems = formatItemsForDatabase(
+      items,
+      existingBox.items || ''
+    );
 
     await db.query(
       `
@@ -291,9 +249,9 @@ export async function updateBox(req, res) {
       WHERE id = ?
       `,
       [
-        name,
-        price,
-        serves || '',
+        name || existingBox.name,
+        price || existingBox.price,
+        serves || existingBox.serves || '',
         formattedItems,
         finalImage,
         status || existingBox.status || 'active',
@@ -301,30 +259,17 @@ export async function updateBox(req, res) {
       ]
     );
 
-
     const [updatedRows] = await db.query(
       'SELECT * FROM boxes WHERE id = ?',
       [id]
     );
 
-
-    const updatedBox = updatedRows[0];
-
-
     return res.status(200).json({
       success: true,
       message: 'Box updated successfully.',
-      box: {
-        ...updatedBox,
-        items: updatedBox.items
-          ? updatedBox.items.split(',').map((item) => item.trim())
-          : [],
-      },
+      box: formatBox(updatedRows[0]),
     });
-
-
   } catch (error) {
-
     console.error('UPDATE BOX ERROR:', error);
 
     return res.status(500).json({
@@ -332,64 +277,46 @@ export async function updateBox(req, res) {
       message: 'Failed to update box.',
       error: error.message,
     });
-
   }
-
-};
-
-
+}
 /**
  * DELETE /api/boxes/:id
  * Private/admin route
- * Delete box and uploaded image
+ * Delete box
  */
 export async function deleteBox(req, res) {
-
   try {
-
     const { id } = req.params;
-
 
     const [existingRows] = await db.query(
       'SELECT * FROM boxes WHERE id = ?',
       [id]
     );
 
-
     if (existingRows.length === 0) {
-
       return res.status(404).json({
         success: false,
         message: 'Box not found.',
       });
-
     }
-
 
     const box = existingRows[0];
 
-
-    if (box.image && box.image.startsWith('/uploads/')) {
-
+    // Delete old image if it exists
+    if (box.image) {
       deleteFile(box.image);
-
     }
-
 
     await db.query(
       'DELETE FROM boxes WHERE id = ?',
       [id]
     );
 
-
     return res.status(200).json({
       success: true,
       message: 'Box deleted successfully.',
     });
-
-
   } catch (error) {
-
     console.error('DELETE BOX ERROR:', error);
 
     return res.status(500).json({
@@ -397,7 +324,5 @@ export async function deleteBox(req, res) {
       message: 'Failed to delete box.',
       error: error.message,
     });
-
   }
-
-};
+}

@@ -87,6 +87,7 @@ export default function Home() {
 
   return (
     <>
+    <Marquee />
       <section className="min-h-screen grid lg:grid-cols-[54%_46%]">
         <div className="bg-olive-dark flex flex-col justify-center px-6 md:px-16 pt-28 pb-24">
           <div className="text-white/40 text-xs tracking-[.28em] uppercase mb-5">
@@ -132,7 +133,7 @@ export default function Home() {
               </div>
 
               <div className="px-2">
-                <b className="font-serif text-white text-2xl">15%</b>
+                <b className="font-serif text-white text-2xl">20%</b>
                 <p className="text-[.55rem] text-white/35 uppercase mt-1">
                   Gold
                 </p>
@@ -142,22 +143,12 @@ export default function Home() {
               </div>
 
               <div className="px-2">
-                <b className="font-serif text-white text-2xl">20%</b>
+                <b className="font-serif text-white text-2xl">25%</b>
                 <p className="text-[.55rem] text-white/35 uppercase mt-1">
                   Connoisseur
                 </p>
                 <p className="text-[.5rem] text-white/25 uppercase">
                   500K RWF
-                </p>
-              </div>
-
-              <div className="px-2">
-                <b className="font-serif text-white text-2xl">25%</b>
-                <p className="text-[.55rem] text-white/35 uppercase mt-1">
-                  VIP
-                </p>
-                <p className="text-[.5rem] text-white/25 uppercase">
-                  1M RWF
                 </p>
               </div>
             </div>
@@ -189,8 +180,6 @@ export default function Home() {
           }}
         />
       </section>
-
-      <Marquee />
        <FindShop />
 
       <section className="section bg-linen">

@@ -1,6 +1,7 @@
 import db from '../config/db.js';
 import deleteFile from '../utils/deleteFile.js';
 import getUploadedFileUrl from '../utils/getUploadedFileUrl.js';
+import addImageToGallery from '../utils/addImageToGallery.js';
 
 function formatBox(box) {
   return {
@@ -23,11 +24,6 @@ function formatItemsForDatabase(items, fallback = '') {
   return fallback;
 }
 
-/**
- * GET /api/boxes
- * Public route
- * Get all active boxes
- */
 export async function getBoxes(req, res) {
   try {
     const [boxes] = await db.query(
@@ -49,11 +45,6 @@ export async function getBoxes(req, res) {
   }
 }
 
-/**
- * GET /api/boxes/search?keyword=value
- * Public route
- * Search boxes
- */
 export async function searchBoxes(req, res) {
   try {
     const keyword = req.query.keyword || '';
@@ -90,11 +81,7 @@ export async function searchBoxes(req, res) {
     });
   }
 }
-/**
- * GET /api/boxes/:id
- * Public route
- * Get one box by ID
- */
+
 export async function getBoxById(req, res) {
   try {
     const { id } = req.params;
@@ -126,11 +113,6 @@ export async function getBoxById(req, res) {
   }
 }
 
-/**
- * POST /api/boxes
- * Private/admin route
- * Create new box
- */
 export async function createBox(req, res) {
   try {
     const {
@@ -144,6 +126,14 @@ export async function createBox(req, res) {
     const image = req.file
       ? getUploadedFileUrl(req.file)
       : null;
+
+    if (image) {
+      await addImageToGallery({
+        title: `Box Image - ${name}`,
+        category: 'boxes',
+        image,
+      });
+    }
 
     const formattedItems = formatItemsForDatabase(items);
 
@@ -190,11 +180,6 @@ export async function createBox(req, res) {
   }
 }
 
-/**
- * PUT /api/boxes/:id
- * Private/admin route
- * Update box
- */
 export async function updateBox(req, res) {
   try {
     const { id } = req.params;
@@ -227,6 +212,14 @@ export async function updateBox(req, res) {
 
     if (newImage && existingBox.image) {
       deleteFile(existingBox.image);
+    }
+
+    if (newImage) {
+      await addImageToGallery({
+        title: `Box Image - ${name || existingBox.name}`,
+        category: 'boxes',
+        image: newImage,
+      });
     }
 
     const finalImage = newImage || existingBox.image;
@@ -279,11 +272,7 @@ export async function updateBox(req, res) {
     });
   }
 }
-/**
- * DELETE /api/boxes/:id
- * Private/admin route
- * Delete box
- */
+
 export async function deleteBox(req, res) {
   try {
     const { id } = req.params;
@@ -302,7 +291,6 @@ export async function deleteBox(req, res) {
 
     const box = existingRows[0];
 
-    // Delete old image if it exists
     if (box.image) {
       deleteFile(box.image);
     }

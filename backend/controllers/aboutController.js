@@ -1,6 +1,7 @@
 import db from '../config/db.js';
 import deleteFile from '../utils/deleteFile.js';
 import getUploadedFileUrl from '../utils/getUploadedFileUrl.js';
+import addImageToGallery from '../utils/addImageToGallery.js';
 
 export async function getAbout(req, res) {
   try {
@@ -136,6 +137,22 @@ export async function updateAboutWithImage(req, res) {
     const imageTwo = req.files?.image_two
       ? getUploadedFileUrl(req.files.image_two[0])
       : null;
+
+    if (imageOne) {
+      await addImageToGallery({
+        title: 'About Image One',
+        category: 'about',
+        image: imageOne,
+      });
+    }
+
+    if (imageTwo) {
+      await addImageToGallery({
+        title: 'About Image Two',
+        category: 'about',
+        image: imageTwo,
+      });
+    }
 
     if (existingRows.length === 0) {
       const [result] = await db.query(

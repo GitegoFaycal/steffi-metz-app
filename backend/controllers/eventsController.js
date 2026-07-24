@@ -1,6 +1,7 @@
 import db from '../config/db.js';
 import deleteFile from '../utils/deleteFile.js';
 import getUploadedFileUrl from '../utils/getUploadedFileUrl.js';
+import addImageToGallery from '../utils/addImageToGallery.js';
 
 export async function getEvents(req, res) {
   try {
@@ -105,6 +106,14 @@ export async function createEvent(req, res) {
       ? getUploadedFileUrl(req.file)
       : null;
 
+    if (image) {
+      await addImageToGallery({
+        title: `Event Image - ${title}`,
+        category: 'events',
+        image,
+      });
+    }
+
     const [result] = await db.query(
       `
       INSERT INTO events (
@@ -182,6 +191,14 @@ export async function updateEvent(req, res) {
       deleteFile(existingEvent.image);
     }
 
+    if (newImage) {
+      await addImageToGallery({
+        title: `Event Image - ${title || existingEvent.title}`,
+        category: 'events',
+        image: newImage,
+      });
+    }
+
     const finalImage = newImage || existingEvent.image;
 
     await db.query(
@@ -254,6 +271,7 @@ export async function deleteEvent(req, res) {
       'DELETE FROM events WHERE id = ?',
       [id]
     );
+
     return res.status(200).json({
       success: true,
       message: 'Event deleted successfully.',

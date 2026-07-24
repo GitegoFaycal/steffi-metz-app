@@ -1,6 +1,7 @@
 import db from '../config/db.js';
 import deleteFile from '../utils/deleteFile.js';
 import getUploadedFileUrl from '../utils/getUploadedFileUrl.js';
+import addImageToGallery from '../utils/addImageToGallery.js';
 
 export async function getSettings(req, res) {
   try {
@@ -202,6 +203,14 @@ export async function updateSettingsLogo(req, res) {
 
     const newLogo = getUploadedFileUrl(req.file);
 
+    if (newLogo) {
+      await addImageToGallery({
+        title: 'Website Logo',
+        category: 'settings',
+        image: newLogo,
+      });
+    }
+
     const [existingRows] = await db.query(
       'SELECT * FROM settings ORDER BY id ASC LIMIT 1'
     );
@@ -266,6 +275,14 @@ export async function updateShopImage(req, res) {
     }
 
     const newShopImage = getUploadedFileUrl(req.file);
+
+    if (newShopImage) {
+      await addImageToGallery({
+        title: 'Shop Image',
+        category: 'shop',
+        image: newShopImage,
+      });
+    }
 
     const [existingRows] = await db.query(
       'SELECT * FROM settings ORDER BY id ASC LIMIT 1'

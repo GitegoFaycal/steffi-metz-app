@@ -1,6 +1,7 @@
 import db from '../config/db.js';
 import deleteFile from '../utils/deleteFile.js';
 import getUploadedFileUrl from '../utils/getUploadedFileUrl.js';
+import addImageToGallery from '../utils/addImageToGallery.js';
 
 export async function getHomepage(req, res) {
   try {
@@ -144,6 +145,14 @@ export async function updateHomepageWithImage(req, res) {
     const heroImage = req.file
       ? getUploadedFileUrl(req.file)
       : null;
+
+    if (heroImage) {
+      await addImageToGallery({
+        title: 'Homepage Hero Image',
+        category: 'homepage',
+        image: heroImage,
+      });
+    }
 
     if (existingRows.length === 0) {
       const [result] = await db.query(

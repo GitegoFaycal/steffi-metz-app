@@ -5,6 +5,7 @@ import {
   Info,
   Package,
   CalendarDays,
+  BadgePercent,
   Image,
   MessageSquareQuote,
   Mail,
@@ -40,6 +41,11 @@ const menuItems = [
     label: 'Events',
     path: '/admin/events',
     icon: CalendarDays,
+  },
+  {
+    label: 'Loyalty',
+    path: '/admin/loyalty',
+    icon: BadgePercent,
   },
   {
     label: 'Gallery',
@@ -121,8 +127,8 @@ export default function AdminSidebar() {
 
       <div className="p-4 border-t border-white/10">
         <p className="text-xs text-white/40 leading-5">
-          Manage homepage, boxes, events, gallery, orders, users, and website
-          settings.
+          Manage homepage, boxes, events, loyalty, gallery, orders, users, and
+          website settings.
         </p>
       </div>
     </aside>

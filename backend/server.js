@@ -17,6 +17,7 @@ import paymentsRoutes from './routes/paymentsRoutes.js';
 import newsletterRoutes from './routes/newsletterRoutes.js';
 import usersRoutes from './routes/usersRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import loyaltyRoutes from './routes/loyaltyRoutes.js';
 
 import {
   notFound,
@@ -79,6 +80,7 @@ app.use('/api/payments', paymentsRoutes);
 app.use('/api/newsletters', newsletterRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/loyalty', loyaltyRoutes);
 
 /* =========================
    Error Handling

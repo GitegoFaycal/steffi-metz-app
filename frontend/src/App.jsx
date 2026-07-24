@@ -18,6 +18,7 @@ import HomepageManager from './admin/HomepageManager';
 import AboutManager from './admin/AboutManager';
 import BoxesManager from './admin/BoxesManager';
 import EventsManager from './admin/EventsManager';
+import LoyaltyManager from './admin/LoyaltyManager';
 import GalleryManager from './admin/GalleryManager';
 import TestimonialsManager from './admin/TestimonialsManager';
 import ContactMessages from './admin/ContactMessages';
@@ -33,7 +34,7 @@ export default function App() {
       {/* Public routes */}
       <Route
         path="/"
-        element={
+      element={
           <Layout>
             <Home />
           </Layout>
@@ -44,22 +45,21 @@ export default function App() {
         path="/boxes"
         element={
           <Layout>
-            <Boxes />
-          </Layout>
-        }
+           <Boxes />
+          </Layout>        }
       />
 
       <Route
-        path="/events"
+      path="/events"
         element={
           <Layout>
-            <Events />
+           <Events />
           </Layout>
-        }
+       }
       />
 
       <Route
-        path="/loyalty"
+      path="/loyalty"
         element={
           <Layout>
             <Loyalty />
@@ -105,6 +105,7 @@ export default function App() {
           <Route path="about" element={<AboutManager />} />
           <Route path="boxes" element={<BoxesManager />} />
           <Route path="events" element={<EventsManager />} />
+          <Route path="loyalty" element={<LoyaltyManager />} />
           <Route path="gallery" element={<GalleryManager />} />
           <Route path="testimonials" element={<TestimonialsManager />} />
           <Route path="messages" element={<ContactMessages />} />

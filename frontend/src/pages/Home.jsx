@@ -257,9 +257,8 @@ export default function Home() {
       <div id="community">
         <Community />
       </div>
-            <CatalogueCTA />
-
       <Newsletter />
+       <CatalogueCTA />
     </>
   );
 }

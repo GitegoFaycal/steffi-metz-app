@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { CalendarDays, Clock, MapPin } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import SectionTitle from '../components/SectionTitle';
 import api from '../api/axiosConfig';
 import { getEvents } from '../api/eventsApi';
@@ -153,10 +154,16 @@ export default function Events() {
     return upcomingEvents[0] || events[0] || null;
   }, [events]);
 
+  const bookEvent = (eventItem) => {
+    whatsapp(
+      `Hi Steffi! I would like to book: ${eventItem.title} (${eventItem.price}). Please confirm my spot!`
+    );
+  };
+
   return (
     <section
       id="events"
-      className="relative min-h-[780px] overflow-hidden flex items-center"
+      className="relative min-h-[720px] overflow-hidden flex items-center"
     >
       <div className="absolute inset-0">
         {backgrounds.map((background, index) => (
@@ -172,11 +179,11 @@ export default function Events() {
         ))}
       </div>
 
-      <div className="absolute inset-0 bg-olive-dark/75" />
+      <div className="absolute inset-0 bg-olive-dark/65" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 py-20 w-full">
         <div className="grid lg:grid-cols-[42%_58%] gap-10 items-start">
-          <div className="bg-black/25 border border-white/10 p-7 md:p-10 backdrop-blur-sm">
+          <div className="bg-black/20 border border-white/10 p-7 md:p-10 backdrop-blur-sm">
             <SectionTitle
               eyebrow="At The Gourmet Shop"
               title={`Events &<br/><em>Experiences</em>`}
@@ -187,41 +194,41 @@ export default function Events() {
             </SectionTitle>
 
             {nextEvent && (
-              <div className="bg-white text-olive-dark mt-8 p-6 border border-white/30">
+              <div className="bg-white/70 backdrop-blur-md text-olive-dark mt-6 p-5 border border-white/40 shadow-xl">
                 <p className="text-[.65rem] uppercase tracking-[.25em] text-bordeaux mb-4">
                   Next Event
                 </p>
 
                 <div className="flex gap-5 items-start">
-                  <div className="w-24 min-w-24 bg-bordeaux text-white text-center p-4">
+                  <div className="w-20 min-w-20 bg-bordeaux text-white text-center p-3">
                     <p className="text-xs uppercase tracking-widest">
                       {getMonth(nextEvent.event_date)}
                     </p>
 
-                    <p className="font-serif text-4xl mt-1">
+                    <p className="font-serif text-3xl mt-1">
                       {getDay(nextEvent.event_date)}
                     </p>
                   </div>
 
-                  <div>
-                    <h3 className="font-serif text-3xl text-olive-dark">
+                  <div className="flex-1">
+                    <h3 className="font-serif text-2xl text-olive-dark">
                       {nextEvent.title}
                     </h3>
 
-                    <p className="text-stone-600 text-sm mt-3 flex gap-2 items-center">
+                    <p className="text-stone-700 text-sm mt-3 flex gap-2 items-center">
                       <CalendarDays size={15} />
                       {formatDate(nextEvent.event_date)}
                     </p>
 
                     {nextEvent.event_time && (
-                      <p className="text-stone-600 text-sm mt-2 flex gap-2 items-center">
+                      <p className="text-stone-700 text-sm mt-2 flex gap-2 items-center">
                         <Clock size={15} />
                         {nextEvent.event_time}
                       </p>
                     )}
 
                     {nextEvent.location && (
-                      <p className="text-stone-600 text-sm mt-2 flex gap-2 items-center">
+                      <p className="text-stone-700 text-sm mt-2 flex gap-2 items-center">
                         <MapPin size={15} />
                         {nextEvent.location}
                       </p>
@@ -230,6 +237,15 @@ export default function Events() {
                     <p className="text-bordeaux font-semibold mt-4">
                       {nextEvent.price}
                     </p>
+
+                    <button
+                      type="button"
+                      onClick={() => bookEvent(nextEvent)}
+                      className="mt-5 bg-[#25D366] text-white px-5 py-3 uppercase tracking-[.16em] text-xs font-semibold inline-flex items-center gap-2 hover:bg-[#1ea954] transition"
+                    >
+                      <FaWhatsapp size={16} />
+                      Book
+                    </button>
                   </div>
                 </div>
               </div>
@@ -245,7 +261,7 @@ export default function Events() {
             {events.map((eventItem) => (
               <div
                 key={eventItem.id}
-                className="bg-white/95 border border-white/30 p-6 md:p-7 shadow-xl"
+                className="bg-white/65 backdrop-blur-md border border-white/40 p-4 md:p-5 shadow-lg"
               >
                 <div className="flex flex-wrap items-center gap-3">
                   {eventItem.badge && (
@@ -255,21 +271,21 @@ export default function Events() {
                   )}
 
                   {eventItem.event_date && (
-                    <span className="text-[.6rem] uppercase tracking-widest text-stone-400">
+                    <span className="text-[.6rem] uppercase tracking-widest text-stone-500">
                       {formatDate(eventItem.event_date)}
                     </span>
                   )}
                 </div>
 
-                <h3 className="font-serif text-3xl text-olive-dark mt-2">
+                <h3 className="font-serif text-2xl md:text-3xl text-olive-dark mt-2">
                   {eventItem.title}
                 </h3>
 
-                <p className="text-stone-600 text-sm leading-7 mt-2">
+                <p className="text-stone-700 text-sm leading-6 mt-2">
                   {eventItem.description}
                 </p>
 
-                <div className="grid gap-2 mt-4 text-sm text-stone-500">
+                <div className="grid gap-2 mt-4 text-sm text-stone-600">
                   {eventItem.event_time && (
                     <p className="flex items-center gap-2">
                       <Clock size={15} />
@@ -292,13 +308,10 @@ export default function Events() {
 
                   <button
                     type="button"
-                    className="btn-primary"
-                    onClick={() =>
-                      whatsapp(
-                        `Hi Steffi! I would like to book: ${eventItem.title} (${eventItem.price}). Please confirm my spot!`
-                      )
-                    }
+                    className="bg-bordeaux text-white px-4 py-2.5 uppercase tracking-[.15em] text-[11px] font-semibold inline-flex items-center gap-2 hover:bg-[#b03358] transition"
+                    onClick={() => bookEvent(eventItem)}
                   >
+                    <FaWhatsapp size={15} />
                     Book
                   </button>
                 </div>
@@ -306,7 +319,7 @@ export default function Events() {
             ))}
 
             {events.length === 0 && (
-              <div className="bg-white/95 p-7 text-stone-600">
+              <div className="bg-white/70 backdrop-blur-md p-7 text-stone-700">
                 No events available yet.
               </div>
             )}

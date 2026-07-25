@@ -13,6 +13,11 @@ import BoxesMarquee from '../components/BoxesMarquee';
 import { getHomepage } from '../api/homepageApi';
 import { getAbout } from '../api/aboutApi';
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const SERVER_URL = API_BASE_URL.replace(/\/api\/?$/, '');
+
 const defaultHomepage = {
   location_text: 'Kigali, Rwanda · Since 2020',
   hero_title: 'Handcrafted with love',
@@ -35,16 +40,14 @@ const defaultAbout = {
 };
 
 function getImageUrl(imagePath) {
-  if (!imagePath) {
-    return '';
-  }
+  if (!imagePath) return '';
 
   if (imagePath.startsWith('http')) {
     return imagePath;
   }
 
   if (imagePath.startsWith('/uploads')) {
-    return `http://localhost:5000${imagePath}`;
+    return `${SERVER_URL}${imagePath}`;
   }
 
   return imagePath;
@@ -66,19 +69,29 @@ export default function Home() {
   const [about, setAbout] = useState(defaultAbout);
 
   useEffect(() => {
+    let mounted = true;
+
     async function loadHomepageContent() {
       try {
-        const homepageData = await getHomepage();
-        const aboutData = await getAbout();
+        const [homepageData, aboutData] = await Promise.all([
+          getHomepage(),
+          getAbout(),
+        ]);
 
-        setHomepage(homepageData.homepage || defaultHomepage);
-        setAbout(aboutData.about || defaultAbout);
+        if (!mounted) return;
+
+        setHomepage(homepageData?.homepage || defaultHomepage);
+        setAbout(aboutData?.about || defaultAbout);
       } catch (error) {
         console.error('Failed to load homepage content:', error);
       }
     }
 
     loadHomepageContent();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const heroImage = getImageUrl(homepage.hero_image);
@@ -87,7 +100,6 @@ export default function Home() {
 
   return (
     <>
-   
       <section className="min-h-screen grid lg:grid-cols-[54%_46%]">
         <div className="bg-olive-dark flex flex-col justify-center px-6 md:px-16 pt-28 pb-24">
           <div className="text-white/40 text-xs tracking-[.28em] uppercase mb-5">
@@ -111,12 +123,14 @@ export default function Home() {
               ★ Order more — save more, every month
             </p>
 
-            <div className="grid grid-cols-5 text-center divide-x divide-white/10">
+            <div className="grid grid-cols-4 text-center divide-x divide-white/10">
               <div className="px-2">
                 <b className="font-serif text-white text-2xl">0%</b>
+
                 <p className="text-[.55rem] text-white/35 uppercase mt-1">
                   Curious
                 </p>
+
                 <p className="text-[.5rem] text-white/25 uppercase">
                   Free
                 </p>
@@ -124,9 +138,11 @@ export default function Home() {
 
               <div className="px-2">
                 <b className="font-serif text-white text-2xl">10%</b>
+
                 <p className="text-[.55rem] text-white/35 uppercase mt-1">
                   Regular
                 </p>
+
                 <p className="text-[.5rem] text-white/25 uppercase">
                   100K RWF
                 </p>
@@ -134,9 +150,11 @@ export default function Home() {
 
               <div className="px-2">
                 <b className="font-serif text-white text-2xl">20%</b>
+
                 <p className="text-[.55rem] text-white/35 uppercase mt-1">
                   Gold
                 </p>
+
                 <p className="text-[.5rem] text-white/25 uppercase">
                   250K RWF
                 </p>
@@ -144,16 +162,17 @@ export default function Home() {
 
               <div className="px-2">
                 <b className="font-serif text-white text-2xl">25%</b>
+
                 <p className="text-[.55rem] text-white/35 uppercase mt-1">
                   Connoisseur
                 </p>
+
                 <p className="text-[.5rem] text-white/25 uppercase">
                   500K RWF
                 </p>
               </div>
             </div>
           </div>
-           
 
           <div className="flex flex-wrap gap-3 mt-8">
             <button
@@ -181,10 +200,11 @@ export default function Home() {
           }}
         />
       </section>
-      <Marquee />
-       <FindShop />
 
-      <section className="section bg-linen">
+      <Marquee />
+
+      <FindShop />
+            <section className="section bg-linen">
         <div className="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-16 items-center">
           <div className="relative h-[520px]">
             <div
@@ -204,14 +224,14 @@ export default function Home() {
 
           <div>
             <SectionTitle
-              eyebrow={about.eyebrow || 'About Steffi'}
-              title={about.title || 'European chef,<br/><em>Kigali heart</em>'}
+              eyebrow={about.eyebrow || defaultAbout.eyebrow}
+              title={about.title || defaultAbout.title}
             >
-              {about.description}
+              {about.description || defaultAbout.description}
             </SectionTitle>
 
             <blockquote className="font-serif italic text-2xl text-olive-dark leading-9 border-l-2 border-bordeaux pl-5">
-              “{about.quote}”
+              “{about.quote || defaultAbout.quote}”
             </blockquote>
 
             <button
@@ -236,11 +256,13 @@ export default function Home() {
       <div id="loyalty">
         <Loyalty />
       </div>
+
       <div id="community">
         <Community />
       </div>
-      <CatalogueCTA />
-       <Newsletter />
+            <CatalogueCTA />
+
+      <Newsletter />
     </>
   );
 }

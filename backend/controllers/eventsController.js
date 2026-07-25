@@ -6,7 +6,14 @@ import addImageToGallery from '../utils/addImageToGallery.js';
 export async function getEvents(req, res) {
   try {
     const [events] = await db.query(
-      'SELECT * FROM events WHERE status = "active" ORDER BY id DESC'
+      `
+      SELECT * FROM events
+      WHERE status = "active"
+      ORDER BY
+        CASE WHEN event_date IS NULL THEN 1 ELSE 0 END,
+        event_date ASC,
+        id DESC
+      `
     );
 
     return res.status(200).json({
@@ -36,9 +43,13 @@ export async function searchEvents(req, res) {
         OR price LIKE ?
         OR badge LIKE ?
         OR description LIKE ?
+        OR location LIKE ?
+        OR event_time LIKE ?
       ORDER BY id DESC
       `,
       [
+        `%${keyword}%`,
+        `%${keyword}%`,
         `%${keyword}%`,
         `%${keyword}%`,
         `%${keyword}%`,
@@ -99,6 +110,9 @@ export async function createEvent(req, res) {
       price,
       badge,
       description,
+      event_date,
+      event_time,
+      location,
       status,
     } = req.body;
 
@@ -122,9 +136,12 @@ export async function createEvent(req, res) {
         badge,
         description,
         image,
+        event_date,
+        event_time,
+        location,
         status
       )
-      VALUES (?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         title,
@@ -132,6 +149,9 @@ export async function createEvent(req, res) {
         badge || '',
         description || '',
         image,
+        event_date || null,
+        event_time || '',
+        location || '',
         status || 'active',
       ]
     );
@@ -166,6 +186,9 @@ export async function updateEvent(req, res) {
       price,
       badge,
       description,
+      event_date,
+      event_time,
+      location,
       status,
     } = req.body;
 
@@ -210,6 +233,9 @@ export async function updateEvent(req, res) {
         badge = ?,
         description = ?,
         image = ?,
+        event_date = ?,
+        event_time = ?,
+        location = ?,
         status = ?
       WHERE id = ?
       `,
@@ -219,6 +245,9 @@ export async function updateEvent(req, res) {
         badge || existingEvent.badge || '',
         description || existingEvent.description || '',
         finalImage,
+        event_date || null,
+        event_time || '',
+        location || '',
         status || existingEvent.status || 'active',
         id,
       ]

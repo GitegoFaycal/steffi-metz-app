@@ -8,12 +8,45 @@ import {
   deleteEvent,
 } from '../api/eventsApi';
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+const SERVER_URL = API_BASE_URL.replace(/\/api\/?$/, '');
+
 const emptyForm = {
   title: '',
   price: '',
   badge: '',
   description: '',
+  event_date: '',
+  event_time: '',
+  location: '',
+  status: 'active',
 };
+
+function getImageUrl(imagePath) {
+  if (!imagePath) {
+    return '';
+  }
+
+  if (imagePath.startsWith('http')) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith('/uploads')) {
+    return `${SERVER_URL}${imagePath}`;
+  }
+
+  return imagePath;
+}
+
+function formatDateForInput(dateValue) {
+  if (!dateValue) {
+    return '';
+  }
+
+  return String(dateValue).slice(0, 10);
+}
 
 export default function EventsManager() {
   const [events, setEvents] = useState([]);
@@ -67,9 +100,13 @@ export default function EventsManager() {
       price: eventItem.price || '',
       badge: eventItem.badge || '',
       description: eventItem.description || '',
+      event_date: formatDateForInput(eventItem.event_date),
+      event_time: eventItem.event_time || '',
+      location: eventItem.location || '',
+      status: eventItem.status || 'active',
     });
 
-    setPreview(eventItem.image || '');
+    setPreview(getImageUrl(eventItem.image || ''));
   };
 
   const handleSubmit = async (event) => {
@@ -83,6 +120,10 @@ export default function EventsManager() {
       formData.append('price', form.price);
       formData.append('badge', form.badge);
       formData.append('description', form.description);
+      formData.append('event_date', form.event_date);
+      formData.append('event_time', form.event_time);
+      formData.append('location', form.location);
+      formData.append('status', form.status);
 
       if (imageFile) {
         formData.append('image', imageFile);
@@ -97,7 +138,7 @@ export default function EventsManager() {
       }
 
       resetForm();
-      loadEvents();
+      await loadEvents();
     } catch (error) {
       setMessage(error.response?.data?.message || 'Failed to save event.');
     }
@@ -112,7 +153,7 @@ export default function EventsManager() {
 
     try {
       await deleteEvent(id);
-      loadEvents();
+      await loadEvents();
     } catch (error) {
       console.error('Failed to delete event:', error);
     }
@@ -130,8 +171,13 @@ export default function EventsManager() {
         </h1>
 
         <p className="text-stone-600 mt-3 max-w-2xl leading-7">
-          Manage cooking classes, tasting evenings, catering events, and other
-          experiences.
+          Manage cooking classes, tasting evenings, catering events, dates,
+          times, location, and booking details.
+        </p>
+
+        <p className="text-stone-500 mt-3 text-sm leading-6">
+          To add changing event background pictures, upload images in Gallery
+          Manager and set category to <strong>events-background</strong>.
         </p>
       </div>
 
@@ -169,6 +215,30 @@ export default function EventsManager() {
           />
 
           <FormInput
+            label="Event Date"
+            name="event_date"
+            type="date"
+            value={form.event_date}
+            onChange={handleChange}
+          />
+
+          <FormInput
+            label="Event Time"
+            name="event_time"
+            value={form.event_time}
+            onChange={handleChange}
+            placeholder="10:00 - 13:00"
+          />
+
+          <FormInput
+            label="Location"
+            name="location"
+            value={form.location}
+            onChange={handleChange}
+            placeholder="Kigali, Rwanda"
+          />
+
+          <FormInput
             label="Description"
             name="description"
             value={form.description}
@@ -176,6 +246,22 @@ export default function EventsManager() {
             textarea
             required
           />
+
+          <div>
+            <label className="block text-sm font-medium text-olive-dark mb-2">
+              Status
+            </label>
+
+            <select
+              name="status"
+              value={form.status}
+              onChange={handleChange}
+              className="input"
+            >
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
 
           <ImageUpload
             label="Event Image"
@@ -221,7 +307,10 @@ export default function EventsManager() {
               <tr className="text-left text-stone-500 border-b">
                 <th className="py-3">Title</th>
                 <th>Price</th>
-                <th>Badge</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -232,8 +321,17 @@ export default function EventsManager() {
                   <td className="py-4 font-medium text-olive-dark">
                     {eventItem.title}
                   </td>
+
                   <td>{eventItem.price}</td>
-                  <td>{eventItem.badge}</td>
+
+                  <td>{formatDateForInput(eventItem.event_date) || '-'}</td>
+
+                  <td>{eventItem.event_time || '-'}</td>
+
+                  <td>{eventItem.location || '-'}</td>
+
+                  <td>{eventItem.status}</td>
+
                   <td>
                     <div className="flex gap-3">
                       <button
@@ -258,7 +356,7 @@ export default function EventsManager() {
 
               {events.length === 0 && (
                 <tr>
-                  <td colSpan="4" className="py-8 text-center text-stone-500">
+                  <td colSpan="7" className="py-8 text-center text-stone-500">
                     No events found.
                   </td>
                 </tr>

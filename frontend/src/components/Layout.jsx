@@ -133,20 +133,20 @@ export default function Layout({ children }) {
 
   return (
     <>
-     <div className="fixed top-0 left-0 right-0 z-[60] h-10 overflow-hidden">
+     <div className="fixed top-0 left-0 right-0 z-[60] h-7 overflow-hidden">
            <Marquee />
      </div>
-      <nav className="fixed top-10 left-0 right-0 z-50 h-20 bg-white border-b border-stone-200 shadow-sm">
+      <nav className="fixed top-10 left-0 right-0 z-50 h-16 bg-white border-b border-stone-200 shadow-sm">
          <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-  <img
+       <img
     src={logoUrl}
     alt={siteName}
     className="h-12 w-auto object-contain"
     onError={(e) => {
       e.currentTarget.src = defaultSettings.logo;
     }}
-  />
+     />
 
   <span className="font-serif text-olive-dark text-xl">
     {siteName}
@@ -244,7 +244,7 @@ export default function Layout({ children }) {
         </div>
       )}
 
-      <main>{children}</main>
+      <main className="pt-[120px]">{children}</main>
 
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-olive-dark border-t border-bordeaux px-4 py-2 flex items-center gap-3">
         <span className="bg-bordeaux text-white text-[10px] uppercase tracking-widest px-2 py-1 rounded">

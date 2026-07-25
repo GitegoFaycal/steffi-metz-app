@@ -100,7 +100,7 @@ export default function Home() {
   return (
     <>
       <section className="min-h-screen grid lg:grid-cols-[54%_46%]">
-        <div className="bg-olive-dark flex flex-col justify-center px-6 md:px-16 pt-28 pb-24">
+        <div className="bg-olive-dark flex flex-col justify-center px-6 md:px-16 pt-10 pb-24">
           <div className="text-white/40 text-xs tracking-[.28em] uppercase mb-5">
             {homepage.location_text}
           </div>

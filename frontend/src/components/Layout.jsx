@@ -90,10 +90,10 @@ export default function Layout({ children }) {
   );
 
   const links = [
-    ['boxes', 'Boxes'],
-    ['events', 'Events'],
-    ['loyalty', 'Loyalty'],
-    ['community', 'Community'],
+    { label: 'Boxes', type: 'route', to: '/boxes' },
+    { label: 'Events', type: 'section', id: 'events' },
+    { label: 'Loyalty', type: 'section', id: 'loyalty' },
+    { label: 'Community', type: 'section', id: 'community' },
   ];
 
   const scrollToSection = (id) => {
@@ -132,32 +132,37 @@ export default function Layout({ children }) {
 
   return (
     <>
-      {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 h-20 bg-transparent">
         <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-  <img
-    src={logoUrl}
-    alt={siteName}
-    className="h-12 w-auto object-contain"
-  />
+            {logoUrl}
 
-  <span className="hidden md:block text-2xl font-serif text-cream">
-    {siteName}
-  </span>
-</Link>
+            <span className="hidden md:block text-2xl font-serif text-cream [text-shadow:0_2px_8px_rgba(0,0,0,.8)]">
+              {siteName}
+            </span>
+          </Link>
 
           <div className="hidden lg:flex items-center gap-8">
-            {links.map(([id, label]) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => scrollToSection(id)}
-                className="uppercase tracking-[.15em] text-xs text-cream hover:text-orange-200 transition [text-shadow:0_2px_8px_rgba(0,0,0,.8)]"
-              >
-                {label}
-              </button>
-            ))}
+            {links.map((link) =>
+              link.type === 'route' ? (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  className="uppercase tracking-[.15em] text-xs text-cream hover:text-orange-200 transition [text-shadow:0_2px_8px_rgba(0,0,0,.8)]"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <button
+                  key={link.label}
+                  type="button"
+                  onClick={() => scrollToSection(link.id)}
+                  className="uppercase tracking-[.15em] text-xs text-cream hover:text-orange-200 transition [text-shadow:0_2px_8px_rgba(0,0,0,.8)]"
+                >
+                  {link.label}
+                </button>
+              )
+            )}
 
             <button
               type="button"
@@ -182,7 +187,6 @@ export default function Layout({ children }) {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
       {open && (
         <div className="fixed inset-0 z-[60] bg-olive-dark/95 flex flex-col items-center justify-center gap-8">
           <button
@@ -193,16 +197,27 @@ export default function Layout({ children }) {
             <X size={30} />
           </button>
 
-          {links.map(([id, label]) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => scrollToSection(id)}
-              className="text-3xl font-serif text-white hover:text-bordeaux transition"
-            >
-              {label}
-            </button>
-          ))}
+          {links.map((link) =>
+            link.type === 'route' ? (
+              <Link
+                key={link.label}
+                to={link.to}
+                onClick={() => setOpen(false)}
+                className="text-3xl font-serif text-white hover:text-bordeaux transition"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <button
+                key={link.label}
+                type="button"
+                onClick={() => scrollToSection(link.id)}
+                className="text-3xl font-serif text-white hover:text-bordeaux transition"
+              >
+                {link.label}
+              </button>
+            )
+          )}
 
           <button
             type="button"
@@ -218,10 +233,8 @@ export default function Layout({ children }) {
         </div>
       )}
 
-      {/* Main Content */}
       <main>{children}</main>
 
-      {/* Loyalty Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-olive-dark border-t border-bordeaux px-4 py-2 flex items-center gap-3">
         <span className="bg-bordeaux text-white text-[10px] uppercase tracking-widest px-2 py-1 rounded">
           🌱 Gourmet Curious
@@ -244,23 +257,17 @@ export default function Layout({ children }) {
         </button>
       </div>
 
-      {/* Footer */}
       <footer className="bg-olive-dark text-white py-14 pb-24">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-10">
-          {/* Brand */}
           <div>
-  <img
-    src={logoUrl}
-    alt={siteName}
-    className="h-16 w-auto mb-4 object-contain"
-  />
+            {logoUrl}
 
-  <p className="text-white/60 leading-7 text-sm">
-    {settings.footer_description || defaultSettings.footer_description}
-  </p>
-</div>
+            <p className="text-white/60 leading-7 text-sm">
+              {settings.footer_description ||
+                defaultSettings.footer_description}
+            </p>
+          </div>
 
-          {/* Contact */}
           <div>
             <h3 className="font-serif text-2xl mb-4">
               Contact
@@ -333,23 +340,32 @@ export default function Layout({ children }) {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h3 className="font-serif text-2xl mb-4">
               Quick Links
             </h3>
 
             <div className="flex flex-col gap-3 text-white/60">
-              {links.map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => scrollToSection(id)}
-                  className="text-left hover:text-white transition"
-                >
-                  {label}
-                </button>
-              ))}
+              {links.map((link) =>
+                link.type === 'route' ? (
+                  <Link
+                    key={link.label}
+                    to={link.to}
+                    className="text-left hover:text-white transition"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <button
+                    key={link.label}
+                    type="button"
+                    onClick={() => scrollToSection(link.id)}
+                    className="text-left hover:text-white transition"
+                  >
+                    {link.label}
+                  </button>
+                )
+              )}
             </div>
           </div>
         </div>

@@ -67,7 +67,7 @@ export function uploadTo(folderName) {
     storage: createCloudinaryStorage(folderName),
     fileFilter,
     limits: {
-      fileSize: 30 * 1024 * 1024,
+      fileSize: 25 * 1024 * 1024,
     },
   });
 }

@@ -135,12 +135,19 @@ export default function Layout({ children }) {
       <nav className="fixed top-0 left-0 right-0 z-50 h-20 bg-white border-b border-stone-200 shadow-sm">
         <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-            {logoUrl}
+  <img
+    src={logoUrl}
+    alt={siteName}
+    className="h-12 w-auto object-contain"
+    onError={(e) => {
+      e.currentTarget.src = defaultSettings.logo;
+    }}
+  />
 
-            <span  font-serif text-olive-dark>
-              {siteName}
-              </span>
-          </Link>
+  <span className="font-serif text-olive-dark text-xl">
+    {siteName}
+  </span>
+</Link>
 
           <div className="hidden lg:flex items-center gap-8">
             {links.map((link) =>

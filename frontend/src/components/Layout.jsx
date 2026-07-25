@@ -8,6 +8,7 @@ import {
   FaTiktok,
 } from 'react-icons/fa';
 import { getSettings } from '../api/settingsApi';
+import Marquee from './Marquee';
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -132,8 +133,11 @@ export default function Layout({ children }) {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 h-20 bg-white border-b border-stone-200 shadow-sm">
-        <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
+     <div className="fixed top-0 left-0 right-0 z-[60] h-10 overflow-hidden">
+           <Marquee />
+     </div>
+      <nav className="fixed top-10 left-0 right-0 z-50 h-20 bg-white border-b border-stone-200 shadow-sm">
+         <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
   <img
     src={logoUrl}

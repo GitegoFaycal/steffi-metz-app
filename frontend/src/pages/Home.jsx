@@ -5,7 +5,6 @@ import Newsletter from './Newsletter';
 import Events from './Events';
 import Loyalty from './Loyalty';
 import Community from './Community';
-import Marquee from '../components/Marquee';
 import CatalogueCTA from '../components/CatalogueCTA';
 import FindShop from '../components/FindShop';
 import BoxesMarquee from '../components/BoxesMarquee';
@@ -200,8 +199,6 @@ export default function Home() {
           }}
         />
       </section>
-
-      <Marquee />
 
       <FindShop />
             <section className="section bg-linen">

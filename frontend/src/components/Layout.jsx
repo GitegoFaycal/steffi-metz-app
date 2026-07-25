@@ -132,14 +132,14 @@ export default function Layout({ children }) {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 h-20 bg-transparent">
+      <nav className="fixed top-0 left-0 right-0 z-50 h-20 bg-white border-b border-stone-200 shadow-sm">
         <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
             {logoUrl}
 
-            <span className="hidden md:block text-2xl font-serif text-cream [text-shadow:0_2px_8px_rgba(0,0,0,.8)]">
+            <span  font-serif text-olive-dark>
               {siteName}
-            </span>
+              </span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-8">
@@ -148,8 +148,8 @@ export default function Layout({ children }) {
                 <Link
                   key={link.label}
                   to={link.to}
-                  className="uppercase tracking-[.15em] text-xs text-cream hover:text-orange-200 transition [text-shadow:0_2px_8px_rgba(0,0,0,.8)]"
-                >
+                  className="uppercase tracking-[.15em] text-xs text-olive-dark hover:text-bordeaux transition"
+                  >
                   {link.label}
                 </Link>
               ) : (
@@ -157,7 +157,7 @@ export default function Layout({ children }) {
                   key={link.label}
                   type="button"
                   onClick={() => scrollToSection(link.id)}
-                  className="uppercase tracking-[.15em] text-xs text-cream hover:text-orange-200 transition [text-shadow:0_2px_8px_rgba(0,0,0,.8)]"
+                  className="uppercase tracking-[.15em] text-xs text-olive-dark hover:text-bordeaux transition"
                 >
                   {link.label}
                 </button>
@@ -180,8 +180,8 @@ export default function Layout({ children }) {
             className="lg:hidden"
           >
             <Menu
-              size={28}
-              className="text-white [filter:drop-shadow(0_2px_8px_rgba(0,0,0,.8))]"
+            size={28}
+            className="text-olive-dark"
             />
           </button>
         </div>

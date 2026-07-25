@@ -244,7 +244,7 @@ export default function Layout({ children }) {
         </div>
       )}
 
-      <main className="pt-[120px]">{children}</main>
+      <main className="pt-[84px]">{children}</main>
 
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-olive-dark border-t border-bordeaux px-4 py-2 flex items-center gap-3">
         <span className="bg-bordeaux text-white text-[10px] uppercase tracking-widest px-2 py-1 rounded">

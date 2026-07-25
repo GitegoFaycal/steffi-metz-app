@@ -271,13 +271,20 @@ export default function Layout({ children }) {
       <footer className="bg-olive-dark text-white py-14 pb-24">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-10">
           <div>
-            {logoUrl}
+  <img
+    src={logoUrl}
+    alt={siteName}
+    className="h-20 w-auto object-contain mb-5"
+    onError={(e) => {
+      e.currentTarget.src = defaultSettings.logo;
+    }}
+  />
 
-            <p className="text-white/60 leading-7 text-sm">
-              {settings.footer_description ||
-                defaultSettings.footer_description}
-            </p>
-          </div>
+  <p className="text-white/60 leading-7 text-sm">
+    {settings.footer_description ||
+      defaultSettings.footer_description}
+  </p>
+</div>
 
           <div>
             <h3 className="font-serif text-2xl mb-4">

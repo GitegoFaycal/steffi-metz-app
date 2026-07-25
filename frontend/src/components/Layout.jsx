@@ -133,7 +133,7 @@ export default function Layout({ children }) {
 
   return (
     <>
-     <div className="fixed top-0 left-0 right-0 z-[60] h-7 overflow-hidden">
+     <div className="fixed top-0 left-0 right-0 z-[60] h-10 overflow-hidden">
            <Marquee />
      </div>
       <nav className="fixed top-10 left-0 right-0 z-50 h-16 bg-white border-b border-stone-200 shadow-sm">

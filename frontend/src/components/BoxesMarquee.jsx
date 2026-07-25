@@ -101,12 +101,19 @@ export default function BoxesMarquee() {
               >
                 <Link to="/boxes" className="block">
                   <div className="relative h-64 overflow-hidden">
-                    {imageSrc}
+  <img
+    src={imageSrc}
+    alt={box.name}
+    className="w-full h-full object-cover transition duration-500 hover:scale-105"
+    onError={(e) => {
+      e.currentTarget.src = '/assets/image-6.jpg';
+    }}
+  />
 
-                    <div className="absolute bottom-4 right-4 bg-[#4b5933]/90 text-[#d7c28d] px-4 py-2 font-serif text-lg">
-                      {box.price} RWF
-                    </div>
-                  </div>
+  <div className="absolute bottom-4 right-4 bg-[#4b5933]/90 text-[#d7c28d] px-4 py-2 font-serif text-lg">
+    {box.price} RWF
+  </div>
+</div>
 
                   <div className="p-5">
                     <p className="text-[11px] uppercase tracking-[.25em] text-bordeaux">

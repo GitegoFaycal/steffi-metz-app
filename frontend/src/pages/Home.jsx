@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 
 import SectionTitle from '../components/SectionTitle';
 import Newsletter from './Newsletter';
-import Boxes from './Boxes';
 import Events from './Events';
 import Loyalty from './Loyalty';
 import Community from './Community';
 import Marquee from '../components/Marquee';
 import CatalogueCTA from '../components/CatalogueCTA';
 import FindShop from '../components/FindShop';
+import BoxesMarquee from '../components/BoxesMarquee';
 
 import { getHomepage } from '../api/homepageApi';
 import { getAbout } from '../api/aboutApi';
@@ -226,7 +226,7 @@ export default function Home() {
       </section>
 
       <div id="boxes">
-        <Boxes />
+        <BoxesMarquee />
       </div>
 
       <div id="events">

@@ -12,3 +12,17 @@ html{scroll-behavior:smooth} body{font-family:'Jost',sans-serif;background:#faf7
 .animate-marquee {
   animation: marquee 28s linear infinite;
 }
+@keyframes box-marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-box-marquee {
+  width: max-content;
+  animation: box-marquee 35s linear infinite;
+}

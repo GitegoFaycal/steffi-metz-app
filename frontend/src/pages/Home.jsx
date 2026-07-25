@@ -99,13 +99,13 @@ export default function Home() {
 
   return (
     <>
-      <section className="min-h-screen grid lg:grid-cols-[54%_46%]">
-        <div className="bg-olive-dark flex flex-col justify-center px-6 md:px-16 pt-10 pb-24">
+      <section className="min-h-[calc(100vh-84px)] grid lg:grid-cols-[54%_46%]">
+        <div className="bg-olive-dark flex flex-col justify-center px-5 md:px-16 pt-10 pb-16 md:pb-24">
           <div className="text-white/40 text-xs tracking-[.28em] uppercase mb-5">
             {homepage.location_text}
           </div>
 
-          <h1 className="font-serif text-5xl md:text-7xl text-cream font-light leading-tight">
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl text-cream font-light leading-tight">
             {homepage.hero_title}
             <br />
             <em className="text-orange-200/80">
@@ -173,12 +173,12 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-3 mt-8">
+          <div className="grid sm:flex gap-3 mt-8">
             <button
               type="button"
               onClick={() => scrollToSection('boxes')}
-              className="bg-bordeaux text-white px-6 py-3 rounded-full hover:opacity-90 transition"
-            >
+              className="border border-white/30 text-white px-6 py-3 rounded-full hover:bg-white hover:text-olive-dark transition text-center"
+              >
               {homepage.button_one_text || 'Explore boxes'}
             </button>
 

@@ -136,7 +136,7 @@ export default function Layout({ children }) {
      <div className="fixed top-0 left-0 right-0 z-[60] h-10 overflow-hidden">
            <Marquee />
      </div>
-      <nav className="fixed top-10 left-0 right-0 z-50 h-16 bg-white border-b border-stone-200 shadow-sm">
+      <nav className="fixed top-0 left-0 right-0 z-50 h-16 bg-white border-b border-stone-200 shadow-sm">
          <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
        <img

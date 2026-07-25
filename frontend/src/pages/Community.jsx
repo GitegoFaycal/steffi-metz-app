@@ -112,7 +112,7 @@ export default function Community() {
   return (
     <section
       id="community"
-      className="relative min-h-[680px] overflow-hidden flex items-center"
+      className="relative min-h-[760px] md:min-h-[680px] overflow-hidden flex items-center"
     >
       <div className="absolute inset-0">
         {images.map((image, index) => (
@@ -131,7 +131,7 @@ export default function Community() {
       <div className="absolute inset-0 bg-olive-dark/75" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 w-full">
-        <div className="max-w-2xl bg-black/25 border border-white/10 p-8 md:p-12 backdrop-blur-sm">
+        <div className="max-w-2xl bg-black/25 border border-white/10 p-5 md:p-12 backdrop-blur-sm">
           <SectionTitle
             eyebrow={
               settings.community_eyebrow ||

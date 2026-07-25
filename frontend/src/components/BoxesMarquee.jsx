@@ -97,10 +97,10 @@ export default function BoxesMarquee() {
             return (
               <article
                 key={`${box.id || box.name}-${index}`}
-                className="min-w-[300px] md:min-w-[360px] bg-white border border-stone-200 shadow-sm overflow-hidden"
-              >
+                className="min-w-[260px] sm:min-w-[300px] md:min-w-[360px] bg-white border border-stone-200 shadow-sm overflow-hidden"
+                >
                 <Link to="/boxes" className="block">
-                  <div className="relative h-64 overflow-hidden">
+                  <div className="relative h-52 md:h-64 overflow-hidden">
   <img
     src={imageSrc}
     alt={box.name}

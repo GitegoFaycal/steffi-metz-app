@@ -292,14 +292,28 @@ export default function Layout({ children }) {
             </h3>
 
             <p className="text-white/60 text-sm leading-7">
-              {settings.address || defaultSettings.address}
-              <br />
-              WhatsApp:{' '}
-              {settings.whatsapp_number || defaultSettings.whatsapp_number}
-              <br />
-              Email: {settings.email || defaultSettings.email}
-            </p>
+  {settings.google_maps_url ? (
+    <a
+      href={settings.google_maps_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="hover:text-white underline"
+    >
+      {settings.address || defaultSettings.address}
+    </a>
+  ) : (
+    settings.address || defaultSettings.address
+  )}
 
+  <br />
+
+  WhatsApp:{' '}
+  {settings.whatsapp_number || defaultSettings.whatsapp_number}
+
+  <br />
+
+  Email: {settings.email || defaultSettings.email}
+</p>
             <div className="flex items-center gap-4 mt-5">
               <button
                 type="button"

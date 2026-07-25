@@ -53,6 +53,7 @@ export async function updateSettings(req, res) {
       community_description,
       community_button_text,
       community_whatsapp_message,
+      google_maps_url,
     } = req.body;
 
     const [existingRows] = await db.query(
@@ -81,9 +82,10 @@ export async function updateSettings(req, res) {
           community_title,
           community_description,
           community_button_text,
-          community_whatsapp_message
+          community_whatsapp_message,
+          google_maps_url
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)
         `,
         [
           site_name || '',
@@ -105,6 +107,7 @@ export async function updateSettings(req, res) {
           community_description || '',
           community_button_text || '',
           community_whatsapp_message || '',
+          google_maps_url || '',
         ]
       );
 
@@ -144,7 +147,8 @@ export async function updateSettings(req, res) {
         community_title = ?,
         community_description = ?,
         community_button_text = ?,
-        community_whatsapp_message = ?
+        community_whatsapp_message = ?,
+        google_maps_url = ?
       WHERE id = ?
       `,
       [
@@ -167,6 +171,7 @@ export async function updateSettings(req, res) {
         community_description || '',
         community_button_text || '',
         community_whatsapp_message || '',
+        google_maps_url || '',
         settingsId,
       ]
     );

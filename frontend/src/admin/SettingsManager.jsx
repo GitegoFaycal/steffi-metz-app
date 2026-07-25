@@ -29,6 +29,7 @@ const defaultForm = {
   community_description: '',
   community_button_text: '',
   community_whatsapp_message: '',
+  google_maps_url: '',
 };
 
 const API_BASE_URL =
@@ -90,6 +91,7 @@ export default function SettingsManager() {
         community_button_text: settings.community_button_text || '',
         community_whatsapp_message:
           settings.community_whatsapp_message || '',
+          google_maps_url: settings.google_maps_url || '',
       });
 
       if (settings.logo) {
@@ -344,6 +346,13 @@ export default function SettingsManager() {
               rows={4}
               placeholder="Mon - Fri: 09:00 - 18:00&#10;Sat: 10:00 - 14:00"
             />
+            <FormInput
+  label="Google Maps Location URL"
+  name="google_maps_url"
+  value={form.google_maps_url}
+  onChange={handleChange}
+  placeholder="https://www.google.com/maps/place/..."
+/>
 
             <ImageUpload
               label="Shop Image"

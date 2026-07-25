@@ -8,6 +8,7 @@ import Boxes from './pages/Boxes';
 import Events from './pages/Events';
 import Loyalty from './pages/Loyalty';
 import Community from './pages/Community';
+import CommunityApplication from './pages/CommunityApplication';
 import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Newsletter from './pages/Newsletter';
@@ -28,14 +29,14 @@ import NewsletterManager from './admin/NewsletterManager';
 import UsersManager from './admin/UsersManager';
 import SettingsManager from './admin/SettingsManager';
 import MarqueeManager from './admin/MarqueeManager';
+import CommunityApplicationsManager from './admin/CommunityApplicationsManager';
 
 export default function App() {
   return (
     <Routes>
-      {/* Public routes */}
       <Route
         path="/"
-      element={
+        element={
           <Layout>
             <Home />
           </Layout>
@@ -46,21 +47,22 @@ export default function App() {
         path="/boxes"
         element={
           <Layout>
-           <Boxes />
-          </Layout>        }
+            <Boxes />
+          </Layout>
+        }
       />
 
       <Route
-      path="/events"
+        path="/events"
         element={
           <Layout>
-           <Events />
+            <Events />
           </Layout>
-       }
+        }
       />
 
       <Route
-      path="/loyalty"
+        path="/loyalty"
         element={
           <Layout>
             <Loyalty />
@@ -73,6 +75,15 @@ export default function App() {
         element={
           <Layout>
             <Community />
+          </Layout>
+        }
+      />
+
+      <Route
+        path="/community-application"
+        element={
+          <Layout>
+            <CommunityApplication />
           </Layout>
         }
       />
@@ -95,10 +106,8 @@ export default function App() {
         }
       />
 
-      {/* Public login route */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected admin routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
@@ -116,7 +125,10 @@ export default function App() {
           <Route path="newsletter" element={<NewsletterManager />} />
           <Route path="users" element={<UsersManager />} />
           <Route path="settings" element={<SettingsManager />} />
-
+          <Route
+            path="community-applications"
+            element={<CommunityApplicationsManager />}
+          />
         </Route>
       </Route>
     </Routes>

@@ -19,6 +19,7 @@ import usersRoutes from './routes/usersRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import loyaltyRoutes from './routes/loyaltyRoutes.js';
 import marqueeRoutes from './routes/marqueeRoutes.js';
+import communityApplicationsRoutes from './routes/communityApplicationsRoutes.js';
 
 import {
   notFound,
@@ -28,10 +29,6 @@ import {
 dotenv.config();
 
 const app = express();
-
-/* =========================
-   CORS
-========================= */
 
 const allowedOrigins = [
   'http://localhost:5173',
@@ -51,22 +48,10 @@ app.use(
   })
 );
 
-/* =========================
-   Middlewares
-========================= */
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* =========================
-   Static Uploads Folder
-========================= */
-
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
-
-/* =========================
-   Test Routes
-========================= */
 
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -81,10 +66,6 @@ app.get('/api/health', (req, res) => {
     message: 'Backend connected successfully',
   });
 });
-
-/* =========================
-   API Routes
-========================= */
 
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
@@ -102,17 +83,10 @@ app.use('/api/users', usersRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/loyalty', loyaltyRoutes);
 app.use('/api/marquee', marqueeRoutes);
-
-/* =========================
-   Error Handling
-========================= */
+app.use('/api/community-applications', communityApplicationsRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
-
-/* =========================
-   Start Server
-========================= */
 
 const PORT = process.env.PORT || 5000;
 

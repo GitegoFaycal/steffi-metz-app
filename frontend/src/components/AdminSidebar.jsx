@@ -15,6 +15,7 @@ import {
   Users,
   Settings,
   ScrollText,
+  ClipboardList,
 } from 'lucide-react';
 
 const menuItems = [
@@ -29,10 +30,10 @@ const menuItems = [
     icon: Home,
   },
   {
-  label: 'Marquee',
-  path: '/admin/marquee',
-  icon: ScrollText,
-},
+    label: 'Marquee',
+    path: '/admin/marquee',
+    icon: ScrollText,
+  },
   {
     label: 'About',
     path: '/admin/about',
@@ -57,6 +58,11 @@ const menuItems = [
     label: 'Gallery',
     path: '/admin/gallery',
     icon: Image,
+  },
+  {
+    label: 'Community Applications',
+    path: '/admin/community-applications',
+    icon: ClipboardList,
   },
   {
     label: 'Testimonials',
@@ -100,7 +106,10 @@ export default function AdminSidebar() {
     <aside className="fixed left-0 top-0 h-screen w-64 bg-olive-dark text-white z-50 hidden lg:flex flex-col">
       <div className="h-20 flex items-center px-6 border-b border-white/10">
         <div>
-          <h1 className="font-serif text-2xl">Steffi Metz</h1>
+          <h1 className="font-serif text-2xl">
+            Steffi Metz
+          </h1>
+
           <p className="text-xs text-white/40 uppercase tracking-widest">
             Admin Panel
           </p>
@@ -133,8 +142,8 @@ export default function AdminSidebar() {
 
       <div className="p-4 border-t border-white/10">
         <p className="text-xs text-white/40 leading-5">
-          Manage homepage, boxes, events, loyalty, gallery, orders, users, and
-          website settings.
+          Manage homepage, boxes, events, loyalty, gallery, applications,
+          orders, users, and website settings.
         </p>
       </div>
     </aside>

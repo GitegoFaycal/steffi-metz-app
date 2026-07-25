@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import SectionTitle from '../components/SectionTitle';
 import api from '../api/axiosConfig';
 import { getSettings } from '../api/settingsApi';
-import { whatsapp } from '../api/index';
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -17,13 +16,11 @@ const defaultImages = [
 ];
 
 const defaultSettings = {
-  community_eyebrow: 'Join the movement',
-  community_title: 'The Artisan<br/><em>Food Community</em>',
+  community_eyebrow: 'Cook With Us',
+  community_title: 'Apply to join<br/><em>one cooking session</em>',
   community_description:
-    'Expats, locals, families and professionals meet around handmade food, practical workshops and memorable experiences.',
-  community_button_text: 'Join on WhatsApp',
-  community_whatsapp_message:
-    'Hi Steffi! I would like to join the Artisan Food Community updates.',
+    'Apply online to cook with the Steffi Metz community. Applications are reviewed first, and selected applicants may join one session. You may bring your own product or pay the product cost if needed.',
+  community_button_text: 'Apply to Cook With Us',
 };
 
 function getImageUrl(imagePath) {
@@ -73,7 +70,6 @@ export default function Community() {
         const communityImages = galleryItems
           .filter((item) => {
             const category = String(item.category || '').toLowerCase();
-
             return category.includes('community');
           })
           .map((item) => getImageUrl(item.image))
@@ -113,13 +109,6 @@ export default function Community() {
     return () => clearInterval(interval);
   }, [images]);
 
-  const joinCommunity = () => {
-    whatsapp(
-      settings.community_whatsapp_message ||
-        defaultSettings.community_whatsapp_message
-    );
-  };
-
   return (
     <section
       id="community"
@@ -139,7 +128,7 @@ export default function Community() {
         ))}
       </div>
 
-      <div className="absolute inset-0 bg-olive-dark/70" />
+      <div className="absolute inset-0 bg-olive-dark/75" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 w-full">
         <div className="max-w-2xl bg-black/25 border border-white/10 p-8 md:p-12 backdrop-blur-sm">
@@ -158,16 +147,31 @@ export default function Community() {
               defaultSettings.community_description}
           </SectionTitle>
 
-          <button
-            type="button"
-            onClick={joinCommunity}
-            className="mt-6 bg-[#25D366] text-white px-7 py-4 uppercase tracking-[.18em] text-xs font-semibold inline-flex items-center gap-3 hover:bg-[#1ea954] transition"
-          >
-            <FaWhatsapp size={17} />
+          <div className="bg-white/10 border border-white/10 p-5 mt-6 mb-6">
+            <p className="text-[.65rem] uppercase tracking-[.22em] text-orange-100 mb-3">
+              Application Conditions
+            </p>
 
+            <ul className="grid gap-2 text-white/70 text-sm leading-6">
+              <li>• Apply online before joining.</li>
+              <li>• We review applications and choose who joins.</li>
+              <li>• Each application is valid for one session only.</li>
+              <li>• To join another session, submit a new application.</li>
+              <li>• You may bring your own product or ingredients.</li>
+              <li>
+                • If you do not bring your own product, you may pay the product
+                cost.
+              </li>
+            </ul>
+          </div>
+
+          <Link
+            to="/community-application"
+            className="mt-2 bg-bordeaux text-white px-7 py-4 uppercase tracking-[.18em] text-xs font-semibold inline-flex items-center gap-3 hover:bg-[#b03358] transition"
+          >
             {settings.community_button_text ||
               defaultSettings.community_button_text}
-          </button>
+          </Link>
         </div>
       </div>
     </section>

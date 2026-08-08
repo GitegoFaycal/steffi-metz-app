@@ -116,63 +116,6 @@ export default function Home() {
           <p className="text-white/50 max-w-md leading-8 mt-6 font-light">
             {homepage.hero_description}
           </p>
-
-          <div className="max-w-xl border border-white/10 bg-white/5 mt-8 p-5">
-            <p className="text-[.6rem] text-orange-200/70 uppercase tracking-[.22em] mb-4">
-              ★ Order more — save more, every month
-            </p>
-
-            <div className="grid grid-cols-4 text-center divide-x divide-white/10">
-              <div className="px-2">
-                <b className="font-serif text-white text-2xl">0%</b>
-
-                <p className="text-[.55rem] text-white/35 uppercase mt-1">
-                  Curious
-                </p>
-
-                <p className="text-[.5rem] text-white/25 uppercase">
-                  Free
-                </p>
-              </div>
-
-              <div className="px-2">
-                <b className="font-serif text-white text-2xl">10%</b>
-
-                <p className="text-[.55rem] text-white/35 uppercase mt-1">
-                  Regular
-                </p>
-
-                <p className="text-[.5rem] text-white/25 uppercase">
-                  100K RWF
-                </p>
-              </div>
-
-              <div className="px-2">
-                <b className="font-serif text-white text-2xl">20%</b>
-
-                <p className="text-[.55rem] text-white/35 uppercase mt-1">
-                  Gold
-                </p>
-
-                <p className="text-[.5rem] text-white/25 uppercase">
-                  250K RWF
-                </p>
-              </div>
-
-              <div className="px-2">
-                <b className="font-serif text-white text-2xl">25%</b>
-
-                <p className="text-[.55rem] text-white/35 uppercase mt-1">
-                  Connoisseur
-                </p>
-
-                <p className="text-[.5rem] text-white/25 uppercase">
-                  500K RWF
-                </p>
-              </div>
-            </div>
-          </div>
-
           <div className="grid sm:flex gap-3 mt-8">
             <button
               type="button"

@@ -141,7 +141,6 @@ export default function Layout({ children }) {
           <Link to="/" className="flex items-center gap-3">
        <img
     src={logoUrl}
-    alt={siteName}
     className="h-12 w-auto object-contain"
     onError={(e) => {
       e.currentTarget.src = defaultSettings.logo;

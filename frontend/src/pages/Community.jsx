@@ -16,11 +16,11 @@ const defaultImages = [
 ];
 
 const defaultSettings = {
-  community_eyebrow: 'Cook With Us',
-  community_title: 'Apply to join<br/><em>one cooking session</em>',
+  community_eyebrow: 'Our Community',
+  community_title: 'Food, learning and<br/><em>shared experiences</em>',
   community_description:
-    'Apply online to cook with the Steffi Metz community. Applications are reviewed first, and selected applicants may join one session. You may bring your own product or pay the product cost if needed.',
-  community_button_text: 'Apply to Cook With Us',
+    'Discover cooking sessions, workshops and community experiences with Steffi Metz. Choose an upcoming event and submit an application for the session you would like to attend.',
+  community_button_text: 'Explore Events',
 };
 
 function getImageUrl(imagePath) {
@@ -70,22 +70,14 @@ export default function Community() {
         const communityImages = galleryItems
           .filter((item) => {
             const category = String(item.category || '').toLowerCase();
+
             return category.includes('community');
           })
           .map((item) => getImageUrl(item.image))
           .filter(Boolean);
 
-        const allGalleryImages = galleryItems
-          .map((item) => getImageUrl(item.image))
-          .filter(Boolean);
-
         if (communityImages.length > 0) {
           setImages(communityImages);
-          return;
-        }
-
-        if (allGalleryImages.length > 0) {
-          setImages(allGalleryImages);
         }
       } catch (error) {
         console.error('Failed to load community background images:', error);
@@ -97,24 +89,24 @@ export default function Community() {
 
   useEffect(() => {
     if (images.length <= 1) {
-      return;
+      return undefined;
     }
 
-    const interval = setInterval(() => {
+    const interval = window.setInterval(() => {
       setActiveIndex((currentIndex) =>
         currentIndex === images.length - 1 ? 0 : currentIndex + 1
       );
     }, 4500);
 
-    return () => clearInterval(interval);
+    return () => window.clearInterval(interval);
   }, [images]);
 
   return (
     <section
       id="community"
-      className="relative min-h-[760px] md:min-h-[680px] overflow-hidden flex items-center"
+      className="relative min-h-[560px] overflow-hidden bg-olive-dark"
     >
-      <div className="absolute inset-0">
+      <div className="absolute inset-0" aria-hidden="true">
         {images.map((image, index) => (
           <div
             key={`${image}-${index}`}
@@ -122,16 +114,18 @@ export default function Community() {
               index === activeIndex ? 'opacity-100' : 'opacity-0'
             }`}
             style={{
-              backgroundImage: `url(${image})`,
+              backgroundImage: `url("${image}")`,
             }}
           />
         ))}
+
+        <div className="absolute inset-0 bg-olive-dark/35" />
+
+        <div className="absolute inset-0 bg-gradient-to-r from-olive-dark/80 via-olive-dark/45 to-transparent" />
       </div>
 
-      <div className="absolute inset-0 bg-olive-dark/75" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-5 w-full">
-        <div className="max-w-2xl bg-black/25 border border-white/10 p-5 md:p-12 backdrop-blur-sm">
+      <div className="container-page relative z-10 flex min-h-[560px] items-center py-16">
+        <div className="max-w-2xl rounded-sm border border-white/15 bg-black/20 p-6 backdrop-blur-sm sm:p-8 md:p-10">
           <SectionTitle
             eyebrow={
               settings.community_eyebrow ||
@@ -147,33 +141,37 @@ export default function Community() {
               defaultSettings.community_description}
           </SectionTitle>
 
-          <div className="bg-white/10 border border-white/10 p-5 mt-6 mb-6">
-            <p className="text-[.65rem] uppercase tracking-[.22em] text-orange-100 mb-3">
-              Application Conditions
-            </p>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <Link to="/events" className="btn-primary">
+              {settings.community_button_text ||
+                defaultSettings.community_button_text}
+            </Link>
 
-            <ul className="grid gap-2 text-white/70 text-sm leading-6">
-              <li>• Apply online before joining.</li>
-              <li>• We review applications and choose who joins.</li>
-              <li>• Each application is valid for one session only.</li>
-              <li>• To join another session, submit a new application.</li>
-              <li>• You may bring your own product or ingredients.</li>
-              <li>
-                • If you do not bring your own product, you may pay the product
-                cost.
-              </li>
-            </ul>
+            <Link
+              to="/gallery"
+              className="btn-secondary border-white/80 text-white hover:border-bordeaux"
+            >
+              View Community Moments
+            </Link>
           </div>
-
-          <Link
-            to="/community-application"
-            className="mt-2 bg-bordeaux text-white px-7 py-4 uppercase tracking-[.18em] text-xs font-semibold inline-flex items-center gap-3 hover:bg-[#b03358] transition"
-          >
-            {settings.community_button_text ||
-              defaultSettings.community_button_text}
-          </Link>
         </div>
       </div>
+
+      {images.length > 1 && (
+        <div
+          className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2"
+          aria-hidden="true"
+        >
+          {images.map((image, index) => (
+            <span
+              key={`${image}-indicator-${index}`}
+              className={`h-2 w-2 rounded-full transition ${
+                index === activeIndex ? 'bg-white' : 'bg-white/40'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

@@ -59,11 +59,7 @@ const menuItems = [
     path: '/admin/gallery',
     icon: Image,
   },
-  {
-    label: 'Community Applications',
-    path: '/admin/community-applications',
-    icon: ClipboardList,
-  },
+  
   {
     label: 'Testimonials',
     path: '/admin/testimonials',

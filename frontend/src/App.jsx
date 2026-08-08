@@ -8,7 +8,6 @@ import Boxes from './pages/Boxes';
 import Events from './pages/Events';
 import Loyalty from './pages/Loyalty';
 import Community from './pages/Community';
-import CommunityApplication from './pages/CommunityApplication';
 import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Newsletter from './pages/Newsletter';
@@ -29,7 +28,6 @@ import NewsletterManager from './admin/NewsletterManager';
 import UsersManager from './admin/UsersManager';
 import SettingsManager from './admin/SettingsManager';
 import MarqueeManager from './admin/MarqueeManager';
-import CommunityApplicationsManager from './admin/CommunityApplicationsManager';
 
 export default function App() {
   return (
@@ -80,15 +78,6 @@ export default function App() {
       />
 
       <Route
-        path="/community-application"
-        element={
-          <Layout>
-            <CommunityApplication />
-          </Layout>
-        }
-      />
-
-      <Route
         path="/checkout"
         element={
           <Layout>
@@ -118,17 +107,18 @@ export default function App() {
           <Route path="events" element={<EventsManager />} />
           <Route path="loyalty" element={<LoyaltyManager />} />
           <Route path="gallery" element={<GalleryManager />} />
-          <Route path="testimonials" element={<TestimonialsManager />} />
+
+          <Route
+            path="testimonials"
+            element={<TestimonialsManager />}
+          />
+
           <Route path="messages" element={<ContactMessages />} />
           <Route path="orders" element={<OrdersManager />} />
           <Route path="payments" element={<PaymentsManager />} />
           <Route path="newsletter" element={<NewsletterManager />} />
           <Route path="users" element={<UsersManager />} />
           <Route path="settings" element={<SettingsManager />} />
-          <Route
-            path="community-applications"
-            element={<CommunityApplicationsManager />}
-          />
         </Route>
       </Route>
     </Routes>

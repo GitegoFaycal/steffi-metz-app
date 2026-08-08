@@ -181,14 +181,16 @@ export default function FindShop() {
           </button>
         </div>
 
-        <div>
-          <div
-            className="min-h-[360px] bg-cover bg-center bg-no-repeat shadow-sm"
-            style={{
-              backgroundImage: `url(${shopImage})`,
-            }}
-          />
-        </div>
+        <div className="relative min-h-[420px] overflow-hidden lg:min-h-full">
+  <div
+    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+    style={{
+      backgroundImage: `url("${shopImage}")`,
+    }}
+    role="img"
+    aria-label="The Gourmet Shop products and location"
+  />
+</div>
       </div>
     </section>
   );

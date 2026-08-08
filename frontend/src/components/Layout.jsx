@@ -138,7 +138,9 @@ export default function Layout({ children }) {
      </div>
       <nav className="fixed top-7 left-0 right-0 z-50 h-16 bg-white border-b border-stone-200 shadow-sm">
          <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
+          <Link to="/" 
+          className="inline-flex shrink-0 items-center"
+          aria-label="Steffi Metz homepage">
        <img
     src={logoUrl}
     className="h-12 w-auto object-contain"
@@ -146,10 +148,6 @@ export default function Layout({ children }) {
       e.currentTarget.src = defaultSettings.logo;
     }}
      />
-
-  <span className="font-serif text-olive-dark text-xl">
-    {siteName}
-  </span>
 </Link>
 
           <div className="hidden lg:flex items-center gap-8">

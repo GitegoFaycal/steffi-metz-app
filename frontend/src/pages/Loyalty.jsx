@@ -94,7 +94,7 @@ export default function Loyalty() {
       <div className="max-w-7xl mx-auto px-1 md:px-4">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <p className="text-[0.6rem] uppercase tracking-[0.35em] text-bordeaux mb-4">
-            5-Level Loyalty Programme
+            4-Level Loyalty Programme
           </p>
 
           <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight text-olive-dark font-light">

@@ -1,8 +1,14 @@
 {
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/((?!api).*)",
-      "destination": "/index.html"
+      "source": "/",
+      "destination": "https://steffmetz.appswifts.com/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://steffmetz.appswifts.com/:path*",
+      "permanent": true
     }
   ]
 }

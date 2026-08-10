@@ -1,0 +1,55 @@
+RewriteEngine On
+DirectoryIndex index.html
+
+# Disable mod_pagespeed
+<IfModule pagespeed_module>
+ModPagespeed off
+</IfModule>
+<IfModule mod_pagespeed>
+ModPagespeed off
+</IfModule>
+<IfModule mod_pspeed>
+ModPagespeed off
+</IfModule>
+Header always unset X-Mod-Pagespeed
+
+# API routing
+RewriteRule ^api/settings/?$ api/settings.php [L,QSA]
+RewriteRule ^api/boxes/?$ api/boxes.php [L,QSA]
+RewriteRule ^api/boxes/([0-9]+)/?$ api/boxes.php?id=$1 [L,QSA]
+RewriteRule ^api/events/?$ api/events.php [L,QSA]
+RewriteRule ^api/events/([0-9]+)/?$ api/events.php?id=$1 [L,QSA]
+RewriteRule ^api/loyalty/?$ api/loyalty.php [L,QSA]
+RewriteRule ^api/loyalty/([0-9]+)/?$ api/loyalty.php?id=$1 [L,QSA]
+RewriteRule ^api/loyalty/admin/?$ api/loyalty.php?all=1 [L,QSA]
+RewriteRule ^api/newsletters/?$ api/newsletter.php [L,QSA]
+RewriteRule ^api/newsletters/([0-9]+)/?$ api/newsletter.php?id=$1 [L,QSA]
+RewriteRule ^api/homepage/?$ api/homepage.php [L,QSA]
+RewriteRule ^api/about/?$ api/about.php [L,QSA]
+RewriteRule ^api/gallery/?$ api/gallery.php [L,QSA]
+RewriteRule ^api/gallery/([0-9]+)/?$ api/gallery.php?id=$1 [L,QSA]
+RewriteRule ^api/testimonials/?$ api/testimonials.php [L,QSA]
+RewriteRule ^api/testimonials/([0-9]+)/?$ api/testimonials.php?id=$1 [L,QSA]
+RewriteRule ^api/marquee/?$ api/marquee.php [L,QSA]
+RewriteRule ^api/marquee/admin/?$ api/marquee.php?admin=1 [L,QSA]
+RewriteRule ^api/marquee/([0-9]+)/?$ api/marquee.php?id=$1 [L,QSA]
+RewriteRule ^api/contact-messages/?$ api/contact.php [L,QSA]
+RewriteRule ^api/contact-messages/([0-9]+)/?$ api/contact.php?id=$1 [L,QSA]
+RewriteRule ^api/orders/?$ api/orders.php [L,QSA]
+RewriteRule ^api/orders/([0-9]+)/?$ api/orders.php?id=$1 [L,QSA]
+RewriteRule ^api/payments/?$ api/payments.php [L,QSA]
+RewriteRule ^api/auth/login/?$ api/auth.php [L,QSA]
+RewriteRule ^api/auth/me/?$ api/auth.php [L,QSA]
+RewriteRule ^api/auth/create-initial-admin/?$ api/auth.php [L,QSA]
+
+# Admin routing
+RewriteRule ^admin/?$ admin/index.php [L,QSA]
+
+# Static assets - serve as-is
+RewriteRule ^assets/ - [L]
+RewriteRule ^uploads/ - [L]
+
+# SPA fallback
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.html [L]
